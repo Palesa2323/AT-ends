@@ -49,14 +49,18 @@ public class TerrainGenerator : MonoBehaviour
             }
         }
 
+        mesh.Clear(); // Add this to clear any previous mesh data
         mesh.vertices = vertices;
         mesh.triangles = triangles;
         mesh.uv = uv;
         mesh.RecalculateNormals();
+        mesh.RecalculateBounds(); // Also a good practice to recalculate the bounds
     }
 
     void ApplyMeshToCollider()
     {
+        // Re-assigning the sharedMesh property is crucial for the collider to update
+        meshCollider.sharedMesh = null; // Unassign first to ensure a full refresh
         meshCollider.sharedMesh = mesh;
     }
 }

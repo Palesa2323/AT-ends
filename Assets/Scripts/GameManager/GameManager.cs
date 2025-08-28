@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI;
+using TMPro; // Important: Add this using statement!
 
 public class GameManager : MonoBehaviour
 {
@@ -8,9 +8,10 @@ public class GameManager : MonoBehaviour
     public int crystalShards = 0;
     public int sentryTowerCost = 5;
 
-    public Text shardsText;
-    public Text nexusHealthText;
-    public Text buildCostText;
+    // Change these from 'Text' to 'TextMeshProUGUI'
+    public TextMeshProUGUI shardsText;
+    public TextMeshProUGUI nexusHealthText;
+    public TextMeshProUGUI buildCostText;
 
     public Nexus nexus;
     public GameObject sentryTowerPrefab;
@@ -46,9 +47,9 @@ public class GameManager : MonoBehaviour
 
     void UpdateUI()
     {
-        if (nexusHealthText != null)
+        if (nexusHealthText != null && nexus != null)
         {
-            nexusHealthText.text = "Nexus Health: " + nexus.health.ToString("F0"); // Display health as a whole number
+            nexusHealthText.text = "Nexus Health: " + nexus.health.ToString("F0");
         }
         if (shardsText != null)
         {
@@ -82,7 +83,6 @@ public class GameManager : MonoBehaviour
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                // Check if the raycast hit a valid terrain area (e.g., check its tag)
                 if (hit.collider.gameObject.CompareTag("Terrain"))
                 {
                     Instantiate(sentryTowerPrefab, hit.point, Quaternion.identity);
