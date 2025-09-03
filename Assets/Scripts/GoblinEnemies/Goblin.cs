@@ -5,9 +5,10 @@ public class Goblin : MonoBehaviour
     public float health = 20f;
     public float speed = 2f;
     public float damage = 5f;
+    public int crystalShardsValue = 1;
 
     [HideInInspector]
-    public Transform[] pathWaypoints; // Set this from your Spawner script
+    public Transform[] pathWaypoints; // from  Spawner script
     private int currentWaypointIndex = 0;
 
     void Update()
@@ -22,6 +23,14 @@ public class Goblin : MonoBehaviour
             AttackNexus();
         }
     }
+    /*  void Update()
+    {
+        // If there's a path, move along it
+        if (pathWaypoints != null && pathWaypoints.Length > 0)
+        {
+            MoveAlongPath();
+        }
+    }*/
 
     void MoveToWaypoint()
     {
