@@ -39,27 +39,52 @@ public class MeshGenerator : MonoBehaviour
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
         int i = 0;
 
+        // Initialize min/max heights
+        minTerrainHeight = float.MaxValue;
+        maxTerrainHeight = float.MinValue;
+
+        // Define paths: three start points to center
+        Vector2 center = new Vector2(xSize / 2f, zSize / 2f);
+        Vector2[] pathStarts = new Vector2[3]
+        {
+        new Vector2(0, 0),          // top-left
+        new Vector2(xSize, 0),      // top-right
+        new Vector2(xSize/2f, zSize) // bottom-center
+        };
+        float pathWidth = 2f;
+
         // Generate vertices
         for (int z = 0; z <= zSize; z++)
         {
             for (int x = 0; x <= xSize; x++)
             {
                 float y = Mathf.PerlinNoise((x * .3f) + xOffset, (z * .3f) + zOffset) * 2f;
-                vertices[i] = new Vector3(x, y, z);
-                // Track min and max terrain height
-                minTerrainHeight = float.MaxValue;
-                maxTerrainHeight = float.MinValue;
+                Vector3 vertex = new Vector3(x, y, z);
 
+                // Flatten vertex if it’s near any path
+                Vector2 vert2D = new Vector2(x, z);
+                foreach (Vector2 start in pathStarts)
+                {
+                    if (IsPointNearLine(start, center, vert2D, pathWidth))
+                    {
+                        vertex.y = 0.5f; // flatten for path
+                    }
+                }
+
+                vertices[i] = vertex;
+
+                // Track min and max terrain height
+                if (vertex.y > maxTerrainHeight) maxTerrainHeight = vertex.y;
+                if (vertex.y < minTerrainHeight) minTerrainHeight = vertex.y;
 
                 i++;
             }
         }
 
-        // Generate triangles
+        // Generate triangles (same as before)
         triangles = new int[xSize * zSize * 6];
         int vert = 0;
         int tria = 0;
-
         for (int z = 0; z < zSize; z++)
         {
             for (int x = 0; x < xSize; x++)
@@ -74,45 +99,38 @@ public class MeshGenerator : MonoBehaviour
                 vert++;
                 tria += 6;
             }
-            vert++; // Skip to next row
+            vert++;
         }
 
-        // Generate UVs
+        // Generate colors (gradient)
         colors = new Color[vertices.Length];
-        i = 0; // reset i to 0
+        i = 0;
         for (int z = 0; z <= zSize; z++)
         {
             for (int x = 0; x <= xSize; x++)
             {
                 float height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, vertices[i].y);
-                Debug.Log(height);
                 colors[i] = gradient.Evaluate(height);
-
                 i++;
             }
         }
-
-
     }
 
-    void UpdateMesh()
+    // Helper function for path proximity
+    bool IsPointNearLine(Vector2 start, Vector2 end, Vector2 point, float width)
     {
-        mesh.Clear();
-        mesh.vertices = vertices;
-        mesh.triangles = triangles;
-        mesh.colors =colors;
-
-        mesh.RecalculateNormals();
+        float dist = Vector2.Distance(PointOnLineClosest(start, end, point), point);
+        return dist < width;
     }
 
-    private void OnDrawGizmos()
+    Vector2 PointOnLineClosest(Vector2 a, Vector2 b, Vector2 p)
     {
-        if (vertices == null)
-            return;
-
-        for (int i = 0; i < vertices.Length; i++)
-        {
-            Gizmos.DrawSphere(vertices[i], 0.1f);
-        }
+        Vector2 ap = p - a;
+        Vector2 ab = b - a;
+        float t = Vector2.Dot(ap, ab) / ab.sqrMagnitude;
+        t = Mathf.Clamp01(t);
+        return a + ab * t;
     }
+    void UpdateMesh() { mesh.Clear(); mesh.vertices = vertices; mesh.triangles = triangles; mesh.colors = colors; mesh.RecalculateNormals(); }
+    private void OnDrawGizmos() { if (vertices == null) return; for (int i = 0; i < vertices.Length; i++) { Gizmos.DrawSphere(vertices[i], 0.1f); } }
 }
