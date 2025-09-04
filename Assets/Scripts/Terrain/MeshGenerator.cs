@@ -6,13 +6,20 @@ using System.Collections.Generic;
 public class MeshGenerator : MonoBehaviour
 {
     Mesh mesh;
-    Vector3[] vertices;
+    public Vector3[] vertices;
     int[] triangles;
     Color[] colors;
 
-    public int xSize = 20;
-    public int zSize = 20;
+    public int xSize = 100; // Change this from 20 to a larger number
+    public int zSize = 100; // Change this from 20 to a larger number
     public Gradient gradient;
+    public MeshFilter meshFilter; // Make this a public variable
+    private MeshCollider meshCollider;
+
+    // NEW: Path Color
+    public Color pathColor = Color.grey; // You can change this in the Inspector
+    public float pathWidth = 2f; // Keep this public for the path flattening logic
+
 
     float minTerrainHeight;
     float maxTerrainHeight;
@@ -21,10 +28,22 @@ public class MeshGenerator : MonoBehaviour
     float xOffset;
     float zOffset;
 
+    // Enemy path stuff
+    public List<EnemyPath> enemyPaths = new List<EnemyPath>();
+    public Transform waypointParent; // optional parent for markers in hierarchy
+
     void Start()
     {
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
+
+        // Get the existing MeshCollider component
+        meshCollider = GetComponent<MeshCollider>();
+        if (meshCollider == null)
+        {
+            Debug.LogError("MeshCollider not found on the GameObject!");
+            return;
+        }
 
         // Generate random offsets every new game
         xOffset = Random.Range(0f, 9999f);
@@ -32,7 +51,12 @@ public class MeshGenerator : MonoBehaviour
 
         CreateShape();
         UpdateMesh();
-    }
+
+        // Check terrain height
+        Debug.Log("Terrain min height: " + minTerrainHeight);
+        Debug.Log("Terrain max height: " + maxTerrainHeight);
+
+}
 
     void CreateShape()
     {
@@ -51,7 +75,7 @@ public class MeshGenerator : MonoBehaviour
         new Vector2(xSize, 0),      // top-right
         new Vector2(xSize/2f, zSize) // bottom-center
         };
-        float pathWidth = 2f;
+        float pathWidth = 5f;
 
         // Generate vertices
         for (int z = 0; z <= zSize; z++)
@@ -102,17 +126,95 @@ public class MeshGenerator : MonoBehaviour
             vert++;
         }
 
-        // Generate colors (gradient)
+        /// Generate colors (gradient for terrain, special color for paths)
         colors = new Color[vertices.Length];
         i = 0;
         for (int z = 0; z <= zSize; z++)
         {
             for (int x = 0; x <= xSize; x++)
             {
-                float height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, vertices[i].y);
-                colors[i] = gradient.Evaluate(height);
+                Vector3 currentVertex = vertices[i]; // Get the vertex we're coloring
+                bool isPathVertex = false;
+
+                // Check if this vertex is part of any generated path
+                foreach (EnemyPath path in enemyPaths)
+                {
+                    for (int j = 0; j < path.waypoints.Count - 1; j++)
+                    {
+                        Vector2 start = new Vector2(path.waypoints[j].x, path.waypoints[j].z);
+                        Vector2 end = new Vector2(path.waypoints[j + 1].x, path.waypoints[j + 1].z);
+                        Vector2 vert2D = new Vector2(currentVertex.x, currentVertex.z);
+
+                        if (IsPointNearLine(start, end, vert2D, pathWidth))
+                        {
+                            isPathVertex = true;
+                            // Also flatten the path here, 
+                            // currentVertex.y = 0.5f; // Or whatever flat height i want
+                            // vertices[i] = currentVertex; // Update the vertex in the array
+                            break; // Found a path, no need to check other segments/paths
+                        }
+                    }
+                    if (isPathVertex) break;
+                }
+
+                if (isPathVertex)
+                {
+                    colors[i] = pathColor; // Apply the path color
+                    // Ensure path vertices are flattened consistently
+                    currentVertex.y = 0.5f; // Set to a consistent flat height
+                    vertices[i] = currentVertex; // Update the vertex in the array
+                }
+                else
+                {
+                    // Apply original terrain gradient color
+                    float height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, currentVertex.y);
+                    colors[i] = gradient.Evaluate(height);
+                }
                 i++;
             }
+        }
+        // Create enemy paths
+        GenerateWaypoints(pathStarts, center);
+    }
+
+    void GenerateWaypoints(Vector2[] pathStarts, Vector2 center)
+    {
+        enemyPaths.Clear();
+
+        for (int i = 0; i < pathStarts.Length; i++)
+        {
+            EnemyPath path = new EnemyPath("Enemy Path " + (i + 1));
+            int numWaypoints = 20; // More waypoints for smoother path finding detection
+
+            for (int j = 0; j <= numWaypoints; j++)
+            {
+                float t = j / (float)numWaypoints;
+                Vector2 point2D = Vector2.Lerp(pathStarts[i], center, t);
+
+                // Convert to vertex index to get height
+                int x = Mathf.RoundToInt(point2D.x);
+                int z = Mathf.RoundToInt(point2D.y);
+                int index = Mathf.Clamp(z * (xSize + 1) + x, 0, vertices.Length - 1);
+
+                // Get the *original* terrain height, then flatten if it's a path
+                // We're setting the y to a consistent 0.5f in the coloring loop for path vertices.
+                float y = vertices[index].y;
+
+                // For waypoints, we want them slightly above the flattened path.
+                Vector3 waypoint = new Vector3(point2D.x, 0.5f + 0.5f, point2D.y); // Path is flattened to 0.5f, waypoints at 1.0f
+                path.waypoints.Add(waypoint);
+
+                // Optional visible markers - these will now be above the colored path
+                if (waypointParent != null)
+                {
+                    GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+                    sphere.transform.position = waypoint;
+                    sphere.transform.localScale = Vector3.one * 0.5f;
+                    sphere.name = path.pathName + "_WP" + j;
+                    sphere.transform.SetParent(waypointParent);
+                }
+            }
+            enemyPaths.Add(path);
         }
     }
 
@@ -131,6 +233,49 @@ public class MeshGenerator : MonoBehaviour
         t = Mathf.Clamp01(t);
         return a + ab * t;
     }
-    void UpdateMesh() { mesh.Clear(); mesh.vertices = vertices; mesh.triangles = triangles; mesh.colors = colors; mesh.RecalculateNormals(); }
-    private void OnDrawGizmos() { if (vertices == null) return; for (int i = 0; i < vertices.Length; i++) { Gizmos.DrawSphere(vertices[i], 0.1f); } }
+    private void UpdateMesh()
+    {
+        mesh.Clear();
+        mesh.vertices = vertices;
+        mesh.triangles = triangles;
+        mesh.colors = colors;
+        mesh.RecalculateNormals();
+
+        // Add or update MeshCollider
+        MeshCollider meshCollider = GetComponent<MeshCollider>();
+        if (meshCollider == null)
+            meshCollider = gameObject.AddComponent<MeshCollider>();
+        meshCollider.sharedMesh = mesh;
+    }
+
+
+    private void OnDrawGizmos()
+    {
+        if (enemyPaths == null) return;
+
+        Color[] colors = { Color.red, Color.green, Color.blue };
+
+        for (int i = 0; i < enemyPaths.Count; i++)
+        {
+            Gizmos.color = colors[i % colors.Length];
+            var wp = enemyPaths[i].waypoints;
+            for (int j = 0; j < wp.Count - 1; j++)
+            {
+                Gizmos.DrawSphere(wp[j], 0.2f);
+                Gizmos.DrawLine(wp[j], wp[j + 1]);
+            }
+        }
+    }
+}
+[System.Serializable]
+public class EnemyPath
+{
+    public string pathName;
+    public List<Vector3> waypoints;
+
+    public EnemyPath(string name)
+    {
+        pathName = name;
+        waypoints = new List<Vector3>();
+    }
 }
