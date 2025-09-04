@@ -11,7 +11,7 @@ public class EntitySummoner : MonoBehaviour
 
     public static void Init()
     {
-        if (IsInitialized)
+        if (!IsInitialized) // FIX: was wrong way around
         {
             EnemyPrefabs = new Dictionary<int, GameObject>();
             EnemyObjectPools = new Dictionary<int, Queue<EnemyMovement>>();
@@ -32,20 +32,35 @@ public class EntitySummoner : MonoBehaviour
         {
             Debug.LogWarning("EntitySummoner is already initialized.");
         }
-
     }
 
-   /*ublic static EnemyMovement SummonEnemy(int enemyID, Vector3 position, Quaternion rotation)
+    public static EnemyMovement SummonEnemy(int EnemyID)
     {
         EnemyMovement SummonedEnemy = null;
 
-        if (EnemyPrefabs.ContainsKey(enemyID))
+        if (EnemyPrefabs.ContainsKey(EnemyID))
         {
+            Queue<EnemyMovement> ReferencedQueue = EnemyObjectPools[EnemyID];
 
+            if (ReferencedQueue.Count > 0)
+            {
+                // Dequeue Enemy and Initialize
+                SummonedEnemy = ReferencedQueue.Dequeue();
+                SummonedEnemy.Init();
+            }
+            else
+            {
+                // Instantiate new Enemy and Initialize
+                GameObject NewEnemy = Object.Instantiate(EnemyPrefabs[EnemyID], Vector3.zero, Quaternion.identity);
+                SummonedEnemy = NewEnemy.GetComponent<EnemyMovement>();
+                SummonedEnemy.Init();
+            }
         }
         else
         {
-            Debug.LogError($"Enemy ID {enemyID} not found in EnemyPrefabs.");
+            Debug.LogError($"Enemy ID {EnemyID} not found in EnemyPrefabs.");
         }
-    }*/
+
+        return SummonedEnemy; // FIX: you forgot to return
+    }
 }
