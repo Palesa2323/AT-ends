@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 796806072966206389}
   - component: {fileID: 4368783505468513296}
   - component: {fileID: 1965256339527149786}
-  m_Layer: 0
+  - component: {fileID: 6563292704724798300}
+  m_Layer: 3
   m_Name: TowerStand
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,6 +87,27 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &6563292704724798300
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19424291530869007}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0326977, y: 0.5999999, z: 0.98767906}
+  m_Center: {x: -0.05996561, y: -2.6130407e-15, z: 0.45507753}
 --- !u!1 &4247771980325107363
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,7 +119,7 @@ GameObject:
   - component: {fileID: 3582840762583411737}
   - component: {fileID: 438842739943924668}
   - component: {fileID: 2446547977964951414}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: TowerHead
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -182,10 +204,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8997946685648409849}
   - component: {fileID: 7627861506984377588}
-  - component: {fileID: 6965920117040086614}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SentryTower
-  m_TagString: Untagged
+  m_TagString: Cant Place
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -199,7 +220,7 @@ Transform:
   m_GameObject: {fileID: 8538766398830281285}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 659.5, y: 25.100403, z: 75.29047}
+  m_LocalPosition: {x: 11.453549, y: 2.5800002, z: 41.75}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -219,24 +240,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bae9c0b3628ec4f4ea0222225b427c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &6965920117040086614
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8538766398830281285}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
