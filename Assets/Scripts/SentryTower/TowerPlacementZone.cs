@@ -8,41 +8,53 @@ public class TowerPlacementZone : MonoBehaviour
     [SerializeField] private LayerMask placementcheckMask;
 
     private GameObject CurrentPlacingTower;
-    private RaycastHit hitInfo; // Moved hitInfo to the class scope
+    private RaycastHit hitInfo;
 
     void Update()
     {
-        // Raycast logic must be in Update to get current mouse position every frame.
+        // Raycast from camera to mouse position to get the current position
         Ray camRay = PlayerCamera.ScreenPointToRay(Input.mousePosition);
 
-        // This check must happen every frame to update the hitInfo variable
-        if (Physics.Raycast(camRay, out hitInfo, 100f, placemenCollideMask))
+        if (Physics.Raycast(camRay, out hitInfo, 1000f, placemenCollideMask))
         {
-            // Only move the tower if one is being placed
             if (CurrentPlacingTower != null)
             {
                 CurrentPlacingTower.transform.position = hitInfo.point;
             }
         }
 
-        // The input check should be separate from the raycast logic.
+        // Check for a left mouse button click
         if (Input.GetMouseButtonDown(0))
         {
-            // Check if we hit something and if it's the right place
-            if (hitInfo.collider != null)
+            // First, check if a tower is being placed and we have a valid hit point
+            if (CurrentPlacingTower != null && hitInfo.collider != null)
             {
-                // Check if the area is a valid placement zone
+                // INVALID CHECK 1: Is the clicked spot a restricted area?
                 if (hitInfo.collider.CompareTag("Cant Place"))
                 {
-                    Debug.Log("Cannot place tower here.");
+                    Debug.Log("Cannot place tower here. It's a restricted area.");
+                    Destroy(CurrentPlacingTower); // Destroy the ghost tower
+                    CurrentPlacingTower = null;
                     return; // Stop the function here
                 }
 
-                // If a tower is being placed and the area is valid, drop it.
-                if (CurrentPlacingTower != null)
+                // INVALID CHECK 2: Is the placement spot blocked by another object?
+                BoxCollider towerCollider = CurrentPlacingTower.GetComponentInChildren<BoxCollider>();
+                Vector3 boxCenter = CurrentPlacingTower.transform.position + towerCollider.center;
+                Vector3 halfExtents = towerCollider.size / 2;
+
+                if (Physics.CheckBox(boxCenter, halfExtents, Quaternion.identity, placementcheckMask, QueryTriggerInteraction.Ignore))
                 {
+                    Debug.Log("Cannot place tower here. The area is blocked.");
+                    Destroy(CurrentPlacingTower); // Destroy the ghost tower
                     CurrentPlacingTower = null;
+                    return; // Stop the function here
                 }
+
+                // If we've reached this point, all checks have passed!
+                // Finalize placement by dropping the tower
+                CurrentPlacingTower = null;
+                Debug.Log("Tower placed successfully!");
             }
         }
     }
