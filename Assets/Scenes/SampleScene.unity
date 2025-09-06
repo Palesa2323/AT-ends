@@ -528,7 +528,7 @@ GameObject:
   - component: {fileID: 663992236}
   m_Layer: 0
   m_Name: MeshGenerator
-  m_TagString: Untagged
+  m_TagString: Terrain
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -892,8 +892,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d94cbd685d3fdc4fa3b002bb39c80e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayerCamera: {fileID: 0}
-  tower: {fileID: 0}
+  PlayerCamera: {fileID: 330585545}
+  tower: {fileID: 8538766398830281285, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
   placemenCollideMask:
     serializedVersion: 2
     m_Bits: 0
@@ -1052,8 +1052,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f0ce664655f0524aadbc986e090e6f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerSpotPrefab: {fileID: 839723584}
-  terrainMesh: {fileID: 0}
 --- !u!4 &1486689695
 Transform:
   m_ObjectHideFlags: 0
@@ -1209,7 +1207,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1997323932}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 839723585}
+        m_TargetAssemblyTypeName: TowerPlacementZone, Assembly-CSharp
+        m_MethodName: SetTowerToPlace
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1997323932
 MonoBehaviour:
   m_ObjectHideFlags: 0
