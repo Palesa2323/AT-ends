@@ -874,7 +874,7 @@ GameObject:
   - component: {fileID: 839723586}
   - component: {fileID: 839723585}
   m_Layer: 0
-  m_Name: TowerSpot
+  m_Name: PlacementZone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -7,6 +7,8 @@ public class GameLoop : MonoBehaviour
     // Set this in the Inspector
     public Transform NodeParent;
 
+    public static int Lives = 10;
+
     // These are used by TowerTargetting
     public static Vector3[] NodePositions;
     public static float[] NodeDistance;
@@ -51,6 +53,17 @@ public class GameLoop : MonoBehaviour
         }
 
         StartCoroutine(WaveManager());
+    }
+
+    void Update()
+    {
+        // Check for a lose condition every frame
+        if (Lives <= 0)
+        {
+            // Stop the game and do something to indicate the player has lost
+            Debug.Log("Game Over! You lost all your lives.");
+            Time.timeScale = 0; // Pause the game
+        }
     }
 
     IEnumerator WaveManager()

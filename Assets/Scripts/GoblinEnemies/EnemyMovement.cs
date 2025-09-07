@@ -64,6 +64,7 @@ public class EnemyMovement : MonoBehaviour
         }
         else
         {
+            GameLoop.Lives--; // Reduce player lives
             // The enemy has reached the end of the path
             EntitySummoner.RemoveEnemy(this);
         }
