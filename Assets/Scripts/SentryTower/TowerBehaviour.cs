@@ -12,31 +12,41 @@ public class TowerBehaviour : MonoBehaviour
     public float Range;
     private float Delay;
     private float fireTimer;
+    private LineRenderer lineRenderer;
 
     void Start()
     {
         Delay = 1f / FireRate;
+        lineRenderer = GetComponent<LineRenderer>();
+        lineRenderer.enabled = false;
     }
 
     void Update()
     {
-        // First, check if we have a target
-        if (Target == null)
-        {
-            // If not, find one using the targetting class
-            Target = TowerTargetting.GetTarget(this, TowerTargetting.TargetType.First);
-        }
-        else
-        {
-            // If we have a target, check if it's still in range and alive
-            if (Vector3.Distance(transform.position, Target.transform.position) > Range || Target.Health <= 0)
-            {
-                Target = null; // Target is gone, look for a new one
-                return; // Stop here and wait for the next frame
-            }
+        fireTimer += Time.deltaTime;
 
-            // Aim at the target
-            if (TowerPivot != null)
+        if (Target == null || Target.Health <= 0 || !Target.gameObject.activeSelf)
+        {
+            Target = TowerTargetting.GetTarget(this, TowerTargetting.TargetType.First);
+            if (Target == null)
+            {
+                lineRenderer.enabled = false;
+                return;
+            }
+        }
+
+        if (Vector3.Distance(transform.position, Target.transform.position) > Range)
+        {
+            Target = null;
+            lineRenderer.enabled = false;
+            return;
+        }
+
+        lineRenderer.enabled = true;
+        lineRenderer.SetPosition(0, TowerPivot.position);
+        lineRenderer.SetPosition(1, Target.transform.position);
+        // Aim at the target
+        if (TowerPivot != null)
             {
                 Vector3 direction = Target.transform.position - TowerPivot.position;
                 direction.y = 0; // Prevent looking up/down if you want a flat aim
@@ -50,8 +60,8 @@ public class TowerBehaviour : MonoBehaviour
                 // This is where you would do something like fire a projectile
                 // For now, let's just deal damage directly
                 // You would need a TakeDamage method on the enemy script
-                fireTimer = 0f;
+                Target.TakeDamage(Damage);
+            fireTimer = 0f;
             }
-        }
     }
 }

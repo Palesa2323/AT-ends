@@ -31,6 +31,14 @@ public class EnemyMovement : MonoBehaviour
             Debug.LogError("Assigned path is empty or null!");
         }
     }
+    public void TakeDamage(float damage)
+    {
+        Health -= damage;
+        if (Health <= 0)
+        {
+            EntitySummoner.RemoveEnemy(this);
+        }
+    }
 
     void FixedUpdate()
     {
