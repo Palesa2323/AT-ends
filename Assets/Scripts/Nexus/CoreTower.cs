@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI; // Must be added to use UI components
 
 public class CoreTower : MonoBehaviour
 {
@@ -6,29 +7,32 @@ public class CoreTower : MonoBehaviour
     public float CurrentHealth;
 
     // UI reference for the health bar
-    public UnityEngine.UI.Slider healthSlider;
+    public Slider healthSlider;
 
     void Start()
     {
         CurrentHealth = MaxHealth;
+        // Set the slider's max value to the core tower's max health
+        if (healthSlider != null)
+        {
+            healthSlider.maxValue = MaxHealth;
+            healthSlider.value = CurrentHealth;
+        }
     }
 
     public void TakeDamage(float damage)
     {
         CurrentHealth -= damage;
 
-        // Update the UI health bar
         if (healthSlider != null)
         {
-            healthSlider.value = CurrentHealth / MaxHealth;
+            healthSlider.value = CurrentHealth;
         }
 
-        // Check for game over
         if (CurrentHealth <= 0)
         {
-            // This can be used to signal the game loop
             Debug.Log("Core Tower Destroyed! Game Over!");
-            GameLoop.GameOver();
+            FindFirstObjectByType<GameLoop>().GameOver();
         }
     }
 }

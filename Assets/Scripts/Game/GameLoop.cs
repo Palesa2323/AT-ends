@@ -1,31 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
+using TMPro; 
 public class GameLoop : MonoBehaviour
 {
-    // Set this in the Inspector
     public Transform NodeParent;
+
+    // UI References
+    public TMPro.TextMeshPro resourceText;
+    public GameObject gameOverPanel;
+
     public static int Resources = 100;
 
     public CoreTower coreTower;
-    public static int Lives = 10;
 
-    // These are used by TowerTargetting
     public static Vector3[] NodePositions;
     public static float[] NodeDistance;
     public static List<TowerBehaviour> TowersInGame;
 
     private MeshGenerator meshGenerator;
-    public bool LoopShouldEnd;
 
     void Start()
     {
-        // Initialize Towers list
         TowersInGame = new List<TowerBehaviour>();
-
-        // Initialize enemies
         EntitySummoner.Init();
+
+        // Ensure the game over panel is hidden at the start
+        if (gameOverPanel != null)
+        {
+            gameOverPanel.SetActive(false);
+        }
 
         if (NodeParent != null)
         {
@@ -54,40 +59,47 @@ public class GameLoop : MonoBehaviour
             return;
         }
 
+        UpdateResourceUI(); // Update UI at the start
         StartCoroutine(WaveManager());
     }
 
-    public static void AddResources(int amount)
+    public void UpdateResourceUI()
     {
-        Resources += amount;
+        if (resourceText != null)
+        {
+            resourceText.text = "Resources: " + Resources;
+        }
     }
 
-    public static void GameOver()
+    public void AddResources(int amount)
+    {
+        Resources += amount;
+        UpdateResourceUI(); // Update UI when resources change
+    }
+
+    public void DeductCost(int amount)
+    {
+        Resources -= amount;
+        UpdateResourceUI(); // Update UI when resources change
+    }
+
+    public void GameOver()
     {
         Time.timeScale = 0; // Pause the game
-        // You would show a Game Over UI panel here
-        Lives = 0;
-    }
-    void Update()
-    {
-        // Check for a lose condition every frame
-        if (Lives <= 0)
+        if (gameOverPanel != null)
         {
-            // Stop the game and do something to indicate the player has lost
-            Debug.Log("Game Over! You lost all your lives.");
-            Time.timeScale = 0; // Pause the game
+            gameOverPanel.SetActive(true);
         }
     }
 
     IEnumerator WaveManager()
     {
-        while (!LoopShouldEnd)
+        while (true)
         {
             if (meshGenerator.enemyPaths.Count > 0)
             {
                 int randomIndex = Random.Range(0, meshGenerator.enemyPaths.Count);
                 List<Vector3> selectedPath = meshGenerator.enemyPaths[randomIndex].waypoints;
-
                 EnemyMovement newEnemy = EntitySummoner.SummonEnemy(0);
 
                 if (newEnemy != null)
@@ -95,7 +107,6 @@ public class GameLoop : MonoBehaviour
                     newEnemy.Init(selectedPath);
                 }
             }
-
             yield return new WaitForSeconds(1f);
         }
     }
