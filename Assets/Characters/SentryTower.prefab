@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 796806072966206389}
   - component: {fileID: 4368783505468513296}
   - component: {fileID: 1965256339527149786}
-  - component: {fileID: 6563292704724798300}
   m_Layer: 3
   m_Name: TowerStand
   m_TagString: Untagged
@@ -87,27 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6563292704724798300
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 19424291530869007}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1.0326977, y: 0.5999999, z: 0.98767906}
-  m_Center: {x: -0.05996561, y: -2.6130407e-15, z: 0.45507753}
 --- !u!1 &4247771980325107363
 GameObject:
   m_ObjectHideFlags: 0
@@ -376,5 +354,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 13.365798, y: 19.170738, z: 20.317345}
+  m_Center: {x: 38.279793, y: -4.006128, z: 41.1574}
