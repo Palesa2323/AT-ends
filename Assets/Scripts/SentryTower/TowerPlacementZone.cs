@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TowerPlacementZone : MonoBehaviour
@@ -10,9 +12,16 @@ public class TowerPlacementZone : MonoBehaviour
     private GameObject CurrentPlacingTower;
     private RaycastHit hitInfo;
 
+    public void SetTowerToPlace()
+    {
+        if (CurrentPlacingTower == null)
+        {
+            CurrentPlacingTower = Instantiate(tower, Vector3.zero, Quaternion.identity);
+        }
+    }
+
     void Update()
     {
-        // Raycast from camera to mouse position to get the current position
         Ray camRay = PlayerCamera.ScreenPointToRay(Input.mousePosition);
 
         if (Physics.Raycast(camRay, out hitInfo, 1000f, placemenCollideMask))
@@ -27,24 +36,21 @@ public class TowerPlacementZone : MonoBehaviour
         {
             Destroy(CurrentPlacingTower);
             CurrentPlacingTower = null;
-            return; // Stop the function here
+            return;
         }
-        // Check for a left mouse button click
+
         if (Input.GetMouseButtonDown(0))
         {
-            // First, check if a tower is being placed and we have a valid hit point
             if (CurrentPlacingTower != null && hitInfo.collider != null)
             {
-                // INVALID CHECK 1: Is the clicked spot a restricted area?
                 if (hitInfo.collider.CompareTag("Cant Place"))
                 {
                     Debug.Log("Cannot place tower here. It's a restricted area.");
-                    Destroy(CurrentPlacingTower); // Destroy the ghost tower
+                    Destroy(CurrentPlacingTower);
                     CurrentPlacingTower = null;
-                    return; // Stop the function here
+                    return;
                 }
 
-                // INVALID CHECK 2: Is the placement spot blocked by another object?
                 BoxCollider towerCollider = CurrentPlacingTower.GetComponentInChildren<BoxCollider>();
                 Vector3 boxCenter = CurrentPlacingTower.transform.position + towerCollider.center;
                 Vector3 halfExtents = towerCollider.size / 2;
@@ -52,26 +58,16 @@ public class TowerPlacementZone : MonoBehaviour
                 if (Physics.CheckBox(boxCenter, halfExtents, Quaternion.identity, placementcheckMask, QueryTriggerInteraction.Ignore))
                 {
                     Debug.Log("Cannot place tower here. The area is blocked.");
-                    GameLoop.TowersInGame.Add(CurrentPlacingTower.GetComponent<TowerBehaviour>());
-                   
-
-
-
+                    Destroy(CurrentPlacingTower); // Destroy the tower if a collision is found
+                    CurrentPlacingTower = null;
+                    return;
                 }
 
-                // If we've reached this point, all checks have passed!
-                // Finalize placement by dropping the tower
+                // If all checks pass, finalize placement and add to the list
+                GameLoop.TowersInGame.Add(CurrentPlacingTower.GetComponent<TowerBehaviour>());
                 CurrentPlacingTower = null;
                 Debug.Log("Tower placed successfully!");
             }
-        }
-    }
-
-    public void SetTowerToPlace()
-    {
-        if (CurrentPlacingTower == null)
-        {
-            CurrentPlacingTower = Instantiate(tower, Vector3.zero, Quaternion.identity);
         }
     }
 }

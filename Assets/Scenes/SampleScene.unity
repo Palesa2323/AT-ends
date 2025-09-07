@@ -688,7 +688,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 693677792}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: WayPointParent
   m_TagString: Cant Place
   m_Icon: {fileID: 0}
@@ -899,7 +899,7 @@ MonoBehaviour:
     m_Bits: 55
   placementcheckMask:
     serializedVersion: 2
-    m_Bits: 62
+    m_Bits: 254
 --- !u!65 &839723586
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1053,7 +1053,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fae5996cfe76c347b5d58e65f780462, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NodeParent: {fileID: 0}
+  NodeParent: {fileID: 693677792}
   LoopShouldEnd: 0
 --- !u!4 &1530542848
 Transform:
@@ -1082,6 +1082,96 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 00173d2a394890349a3fb3116873c627, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &1726910689
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7627861506984377588, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      propertyPath: EnemiesLayer.m_Bits
+      value: 64
+      objectReference: {fileID: 0}
+    - target: {fileID: 8538766398830281285, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      propertyPath: m_Name
+      value: SentryTower
+      objectReference: {fileID: 0}
+    - target: {fileID: 8997946685648409849, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 14.86
+      objectReference: {fileID: 0}
+    - target: {fileID: 8997946685648409849, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 5.79
+      objectReference: {fileID: 0}
+    - target: {fileID: 8997946685648409849, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 19.807953
+      objectReference: {fileID: 0}
+    - target: {fileID: 8997946685648409849, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8997946685648409849, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8997946685648409849, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8997946685648409849, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8997946685648409849, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8997946685648409849, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8997946685648409849, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8538766398830281285, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1726910691}
+  m_SourcePrefab: {fileID: 100100000, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+--- !u!1 &1726910690 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8538766398830281285, guid: 9037f95d7a2c51344a9a30eefb658fdc, type: 3}
+  m_PrefabInstance: {fileID: 1726910689}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1726910691
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1726910690}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1997323929
 GameObject:
   m_ObjectHideFlags: 0
@@ -1228,3 +1318,4 @@ SceneRoots:
   - {fileID: 693677792}
   - {fileID: 799086549}
   - {fileID: 1530542848}
+  - {fileID: 1726910689}

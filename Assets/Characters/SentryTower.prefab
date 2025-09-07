@@ -134,13 +134,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4247771980325107363}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.7071067, y: -0.000000030908616, z: 0.000000030908623, w: 0.7071068}
+  m_LocalRotation: {x: -0.49991274, y: -0.49991274, z: -0.50008726, w: 0.50008726}
   m_LocalPosition: {x: 37.109985, y: -0.10039902, z: 43.727356}
   m_LocalScale: {x: 20, y: 20, z: 20}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8997946685648409849}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: -90}
 --- !u!33 &438842739943924668
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -240,3 +240,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bae9c0b3628ec4f4ea0222225b427c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  EnemiesLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  Target: {fileID: 0}
+  TowerPivot: {fileID: 8997946685648409849}
+  Damage: 0
+  FireRate: 0
+  Range: 0
