@@ -7,6 +7,7 @@ public class EnemyMovement : MonoBehaviour
     public float Health;
     public float Speed;
     public int ID;
+    public int NodeIndex;
 
     private List<Vector3> waypoints;
     private int currentWaypointIndex = 0;

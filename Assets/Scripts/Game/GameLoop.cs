@@ -4,35 +4,43 @@ using UnityEngine;
 
 public class GameLoop : MonoBehaviour
 {
-    // Make this a public variable to set in the Inspector
+    // Set this in the Inspector
     public Transform NodeParent;
 
-    // The rest of your variables
+    // These are used by TowerTargetting
+    public static Vector3[] NodePositions;
+    public static float[] NodeDistance;
+    public static List<TowerBehaviour> TowersInGame;
+
     private MeshGenerator meshGenerator;
-    public bool LoopShouldEnd = false;
+    public bool LoopShouldEnd;
 
     void Start()
     {
-        // TowersInGame list is not used in this script, so you can remove it if not needed.
-        // TowersInGame = new List<TowerBehaviour>(); 
+        // Initialize Towers list
+        TowersInGame = new List<TowerBehaviour>();
 
+        // Initialize enemies
         EntitySummoner.Init();
 
-        // The following lines had errors and are not currently used in the WaveManager.
-        // They are commented out to prevent errors until you need them.
-        /*
-        Vector3[] NodePositions = new Vector3[NodeParent.childCount];
-        for(int i = 0; i < NodePositions.Length; i++)
+        if (NodeParent != null)
         {
-            NodePositions[i] = NodeParent.GetChild(i).position;
-        }
+            NodePositions = new Vector3[NodeParent.childCount];
+            for (int i = 0; i < NodePositions.Length; i++)
+            {
+                NodePositions[i] = NodeParent.GetChild(i).position;
+            }
 
-        float[] NodeDistance = new float[NodePositions.Length - 1];
-        for (int i = 0; i < NodeDistance.Length; i++)
-        {
-            NodeDistance[i] = Vector3.Distance(NodePositions[i], NodePositions[i + 1]);
+            NodeDistance = new float[NodePositions.Length - 1];
+            for (int i = 0; i < NodeDistance.Length; i++)
+            {
+                NodeDistance[i] = Vector3.Distance(NodePositions[i], NodePositions[i + 1]);
+            }
         }
-        */
+        else
+        {
+            Debug.LogError("NodeParent not set in the Inspector. Cannot calculate node positions.");
+        }
 
         meshGenerator = FindFirstObjectByType<MeshGenerator>();
 

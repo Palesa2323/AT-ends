@@ -23,6 +23,12 @@ public class TowerPlacementZone : MonoBehaviour
             }
         }
 
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Destroy(CurrentPlacingTower);
+            CurrentPlacingTower = null;
+            return; // Stop the function here
+        }
         // Check for a left mouse button click
         if (Input.GetMouseButtonDown(0))
         {
@@ -46,9 +52,11 @@ public class TowerPlacementZone : MonoBehaviour
                 if (Physics.CheckBox(boxCenter, halfExtents, Quaternion.identity, placementcheckMask, QueryTriggerInteraction.Ignore))
                 {
                     Debug.Log("Cannot place tower here. The area is blocked.");
-                    Destroy(CurrentPlacingTower); // Destroy the ghost tower
-                    CurrentPlacingTower = null;
-                    return; // Stop the function here
+                    GameLoop.TowersInGame.Add(CurrentPlacingTower.GetComponent<TowerBehaviour>());
+                   
+
+
+
                 }
 
                 // If we've reached this point, all checks have passed!
