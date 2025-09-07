@@ -8,6 +8,7 @@ public class TowerPlacementZone : MonoBehaviour
     [SerializeField] private GameObject tower;
     [SerializeField] private LayerMask placemenCollideMask;
     [SerializeField] private LayerMask placementcheckMask;
+    private int TowerCost = 50;
 
     private GameObject CurrentPlacingTower;
     private RaycastHit hitInfo;

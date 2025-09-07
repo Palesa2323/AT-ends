@@ -8,10 +8,13 @@ public class EnemyMovement : MonoBehaviour
     public float Speed;
     public int ID;
     public int NodeIndex;
+    public int resourcesToAward = 10;
+    public float damageToCore = 10f;
 
     private List<Vector3> waypoints;
     private int currentWaypointIndex = 0;
     private Rigidbody rb;
+    private CoreTower coreTower;
 
     public void Init(List<Vector3> assignedPath)
     {

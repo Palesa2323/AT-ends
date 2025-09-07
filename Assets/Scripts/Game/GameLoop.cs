@@ -6,7 +6,9 @@ public class GameLoop : MonoBehaviour
 {
     // Set this in the Inspector
     public Transform NodeParent;
+    public static int Resources = 100;
 
+    public CoreTower coreTower;
     public static int Lives = 10;
 
     // These are used by TowerTargetting
@@ -55,6 +57,17 @@ public class GameLoop : MonoBehaviour
         StartCoroutine(WaveManager());
     }
 
+    public static void AddResources(int amount)
+    {
+        Resources += amount;
+    }
+
+    public static void GameOver()
+    {
+        Time.timeScale = 0; // Pause the game
+        // You would show a Game Over UI panel here
+        Lives = 0;
+    }
     void Update()
     {
         // Check for a lose condition every frame
