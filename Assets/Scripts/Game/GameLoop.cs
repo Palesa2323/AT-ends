@@ -8,10 +8,10 @@ public class GameLoop : MonoBehaviour
     public Transform NodeParent;
 
     // UI References
-    public TMPro.TextMeshPro resourceText;
+    public TextMeshProUGUI resourceText;
     public GameObject gameOverPanel;
 
-    public static int Resources = 100;
+    public static int Resources = 100; // This tracks the player's money
 
     public CoreTower coreTower;
 
@@ -38,6 +38,12 @@ public class GameLoop : MonoBehaviour
             for (int i = 0; i < NodePositions.Length; i++)
             {
                 NodePositions[i] = NodeParent.GetChild(i).position;
+            }
+            
+            // The last node is the middle, where all paths converge
+            if (coreTower != null && NodePositions.Length > 0)
+            {
+                coreTower.transform.position = NodePositions[NodePositions.Length - 1];
             }
 
             NodeDistance = new float[NodePositions.Length - 1];
@@ -104,8 +110,9 @@ public class GameLoop : MonoBehaviour
 
                 if (newEnemy != null)
                 {
-                    newEnemy.Init(selectedPath);
+                    newEnemy.Init(selectedPath, coreTower); // <-- pass reference to tower
                 }
+
             }
             yield return new WaitForSeconds(1f);
         }

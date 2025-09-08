@@ -8,7 +8,7 @@ public class TowerPlacementZone : MonoBehaviour
     public GameObject tower;
     public LayerMask placemenCollideMask;
     public LayerMask placementcheckMask;
-    public int TowerCost = 50;
+    public int TowerCost = 50; // Cost of the tower to be placed
 
     private GameObject CurrentPlacingTower;
     private GameLoop gameLoop;

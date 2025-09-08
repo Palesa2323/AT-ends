@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 4271570339268466677}
   - component: {fileID: 3770443359722776411}
   - component: {fileID: 7168417001255941858}
+  - component: {fileID: 1460929053666942734}
+  - component: {fileID: 8855440865413522347}
   m_Layer: 6
   m_Name: Basic
   m_TagString: Untagged
@@ -46,10 +48,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd5f46b89bb65e441b3b9c571dc43515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 5
-  Health: 0
-  Speed: 4
+  MaxHealth: 12
+  Health: 10
+  Speed: 1
   ID: 0
+  NodeIndex: 0
+  resourcesToAward: 20
+  damageToCore: 20
 --- !u!54 &7168417001255941858
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -77,6 +82,43 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!136 &1460929053666942734
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3342628114031605700}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8855440865413522347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3342628114031605700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47bd9e4e84956a488e8e33fe4726b91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthSliderPrefab: {fileID: 134607941766270133, guid: b1e8788fcd554794cac691507e8a6f32, type: 3}
+  offset: {x: 0, y: 2, z: 0}
 --- !u!1 &5229997613907150662
 GameObject:
   m_ObjectHideFlags: 0

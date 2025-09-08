@@ -15,16 +15,28 @@ public class EnemyMovement : MonoBehaviour
     private int currentWaypointIndex = 0;
     private Rigidbody rb;
     private CoreTower coreTower;
+    private EnemyHealthBar healthBar;
 
-    public void Init(List<Vector3> assignedPath)
+    public void Init(List<Vector3> assignedPath, CoreTower tower)
     {
         Health = MaxHealth;
-        // Assign the path to this enemy
         waypoints = assignedPath;
-
         rb = GetComponent<Rigidbody>();
 
-        // Ensure the enemy is at the start of its path
+        // assign the reference to core tower
+        coreTower = tower;
+
+        healthBar = GetComponent<EnemyHealthBar>();
+        if (healthBar != null)
+        {
+            healthBar.SetMaxHealth(MaxHealth);
+        }
+
+        if (waypoints != null && waypoints.Count > 0)
+        {
+            transform.position = waypoints[0];
+        }
+
         if (waypoints != null && waypoints.Count > 0)
         {
             transform.position = waypoints[0];
@@ -34,15 +46,25 @@ public class EnemyMovement : MonoBehaviour
             Debug.LogError("Assigned path is empty or null!");
         }
     }
+
     public void TakeDamage(float damage)
     {
         Health -= damage;
+        if (healthBar != null)
+        {
+            healthBar.SetCurrentHealth(Health);
+        }
+
         if (Health <= 0)
         {
+            GameLoop gameLoop = FindFirstObjectByType<GameLoop>();
+            if (gameLoop != null)
+            {
+                gameLoop.AddResources(resourcesToAward);
+            }
             EntitySummoner.RemoveEnemy(this);
         }
     }
-
     void FixedUpdate()
     {
         if (waypoints == null) return;

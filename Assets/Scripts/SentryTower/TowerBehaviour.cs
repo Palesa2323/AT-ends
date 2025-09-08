@@ -10,6 +10,7 @@ public class TowerBehaviour : MonoBehaviour
     public float Damage;
     public float FireRate;
     public float Range;
+
     private float Delay;
     private float fireTimer;
     private LineRenderer lineRenderer;
@@ -45,23 +46,21 @@ public class TowerBehaviour : MonoBehaviour
         lineRenderer.enabled = true;
         lineRenderer.SetPosition(0, TowerPivot.position);
         lineRenderer.SetPosition(1, Target.transform.position);
+
         // Aim at the target
         if (TowerPivot != null)
-            {
-                Vector3 direction = Target.transform.position - TowerPivot.position;
-                direction.y = 0; // Prevent looking up/down if you want a flat aim
-                TowerPivot.rotation = Quaternion.LookRotation(direction);
-            }
+        {
+            Vector3 direction = Target.transform.position - TowerPivot.position;
+            direction.y = 0; // Prevent looking up/down if you want a flat aim
+            TowerPivot.rotation = Quaternion.LookRotation(direction);
+        }
 
-            // Attack logic
-            fireTimer += Time.deltaTime;
-            if (fireTimer >= Delay)
-            {
-                // This is where you would do something like fire a projectile
-                // For now, let's just deal damage directly
-                // You would need a TakeDamage method on the enemy script
-                Target.TakeDamage(Damage);
+        // Attack logic
+        fireTimer += Time.deltaTime;
+        if (fireTimer >= Delay)
+        {
+            Target.TakeDamage(Damage); // Deal damage directly
             fireTimer = 0f;
-            }
+        }
     }
 }
