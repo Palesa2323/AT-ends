@@ -102,12 +102,10 @@ public static class TowerTargetting
 
     private static float GetDistanceToEnd(EnemyMovement enemy)
     {
-        // This method remains the same
-        float finalDistance = Vector3.Distance(enemy.transform.position, GameLoop.NodePositions[enemy.NodeIndex]);
-        for (int i = enemy.NodeIndex; i < GameLoop.NodeDistance.Length; i++)
-        {
-            finalDistance += GameLoop.NodeDistance[i];
-        }
-        return finalDistance;
+        // This method has been updated
+        // You'll need to pass the Enemy's NodeIndex and the global waypoint data
+        // For a simple fix, we'll use a direct distance check, as the global waypoint data is no longer accessible here.
+        // A better long-term solution would be to refactor how path data is stored.
+        return Vector3.Distance(enemy.transform.position, GameObject.FindFirstObjectByType<CoreTower>().transform.position);
     }
 }
