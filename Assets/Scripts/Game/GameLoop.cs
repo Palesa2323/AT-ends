@@ -1,35 +1,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro; 
+using TMPro;
+
 public class GameLoop : MonoBehaviour
 {
     public Transform NodeParent;
-
-    // UI References
-    public TextMeshProUGUI resourceText;
+    
+    private TMPro.TextMeshProUGUI resourceText;
     public GameObject gameOverPanel;
-
-    public static int Resources = 100; // This tracks the player's money
-
+    public GameObject winPanel; // Add a new public variable for the win screen
+    
+    public static int Resources = 100;
+    
     public CoreTower coreTower;
-
+    
     public static Vector3[] NodePositions;
     public static float[] NodeDistance;
     public static List<TowerBehaviour> TowersInGame;
 
     private MeshGenerator meshGenerator;
+    public int maxEnemiesToSpawn = 50; // The total number of enemies to spawn
+    private int enemiesSpawned = 0; // Tracks the number of enemies spawned
 
     void Start()
     {
+        resourceText = FindFirstObjectByType<TMPro.TextMeshProUGUI>();
+        if (resourceText == null)
+        {
+            Debug.LogError("No TextMeshProUGUI component found for resources.");
+        }
+
         TowersInGame = new List<TowerBehaviour>();
         EntitySummoner.Init();
 
-        // Ensure the game over panel is hidden at the start
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(false);
+        }
+        if (winPanel != null)
+        {
+            winPanel.SetActive(false);
         }
 
         if (NodeParent != null)
@@ -39,8 +50,7 @@ public class GameLoop : MonoBehaviour
             {
                 NodePositions[i] = NodeParent.GetChild(i).position;
             }
-            
-            // The last node is the middle, where all paths converge
+
             if (coreTower != null && NodePositions.Length > 0)
             {
                 coreTower.transform.position = NodePositions[NodePositions.Length - 1];
@@ -65,7 +75,7 @@ public class GameLoop : MonoBehaviour
             return;
         }
 
-        UpdateResourceUI(); // Update UI at the start
+        UpdateResourceUI();
         StartCoroutine(WaveManager());
     }
 
@@ -80,41 +90,57 @@ public class GameLoop : MonoBehaviour
     public void AddResources(int amount)
     {
         Resources += amount;
-        UpdateResourceUI(); // Update UI when resources change
+        UpdateResourceUI();
     }
-
+    
     public void DeductCost(int amount)
     {
         Resources -= amount;
-        UpdateResourceUI(); // Update UI when resources change
+        UpdateResourceUI();
     }
 
     public void GameOver()
     {
-        Time.timeScale = 0; // Pause the game
+        Time.timeScale = 0;
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
         }
     }
 
+    public void YouWin()
+    {
+        Time.timeScale = 0;
+        if (winPanel != null)
+        {
+            winPanel.SetActive(true);
+        }
+    }
+
     IEnumerator WaveManager()
     {
-        while (true)
+        while (enemiesSpawned < maxEnemiesToSpawn)
         {
             if (meshGenerator.enemyPaths.Count > 0)
             {
                 int randomIndex = Random.Range(0, meshGenerator.enemyPaths.Count);
                 List<Vector3> selectedPath = meshGenerator.enemyPaths[randomIndex].waypoints;
+
                 EnemyMovement newEnemy = EntitySummoner.SummonEnemy(0);
 
                 if (newEnemy != null)
                 {
-                    newEnemy.Init(selectedPath, coreTower); // <-- pass reference to tower
+                    newEnemy.Init(selectedPath, coreTower);
+                    enemiesSpawned++; // Increment the counter
                 }
-
             }
             yield return new WaitForSeconds(1f);
+        }
+        
+        // After all enemies have been spawned, check if the core tower is still alive
+        if (coreTower.CurrentHealth > 0)
+        {
+            YouWin();
         }
     }
 }

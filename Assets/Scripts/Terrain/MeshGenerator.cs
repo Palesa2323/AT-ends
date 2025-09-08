@@ -49,9 +49,11 @@ public class MeshGenerator : MonoBehaviour
         xOffset = Random.Range(0f, 9999f);
         zOffset = Random.Range(0f, 9999f);
 
+        // Randomize path color for each new game
+        pathColor = Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.5f, 1f);
+
         CreateShape();
         UpdateMesh();
-
         // Check terrain height
         Debug.Log("Terrain min height: " + minTerrainHeight);
         Debug.Log("Terrain max height: " + maxTerrainHeight);
@@ -184,24 +186,20 @@ public class MeshGenerator : MonoBehaviour
         for (int i = 0; i < pathStarts.Length; i++)
         {
             EnemyPath path = new EnemyPath("Enemy Path " + (i + 1));
-            int numWaypoints = 20; // More waypoints for smoother path finding detection
+            int numWaypoints = 20;
 
             for (int j = 0; j <= numWaypoints; j++)
             {
                 float t = j / (float)numWaypoints;
                 Vector2 point2D = Vector2.Lerp(pathStarts[i], center, t);
 
-                // Convert to vertex index to get height
                 int x = Mathf.RoundToInt(point2D.x);
                 int z = Mathf.RoundToInt(point2D.y);
                 int index = Mathf.Clamp(z * (xSize + 1) + x, 0, vertices.Length - 1);
 
-                // Get the *original* terrain height, then flatten if it's a path
-                // We're setting the y to a consistent 0.5f in the coloring loop for path vertices.
                 float y = vertices[index].y;
 
-                // For waypoints, we want them slightly above the flattened path.
-                Vector3 waypoint = new Vector3(point2D.x, 0.5f + 0.5f, point2D.y); // Path is flattened to 0.5f, waypoints at 1.0f
+                Vector3 waypoint = new Vector3(point2D.x, 0.5f + 0.5f, point2D.y);
                 path.waypoints.Add(waypoint);
 
                 // Optional visible markers - these will now be above the colored path
@@ -212,6 +210,14 @@ public class MeshGenerator : MonoBehaviour
                     sphere.transform.localScale = Vector3.one * 0.5f;
                     sphere.name = path.pathName + "_WP" + j;
                     sphere.transform.SetParent(waypointParent);
+
+                    // This is the new line you need to add
+                    // Get the MeshRenderer component and disable it
+                    MeshRenderer renderer = sphere.GetComponent<MeshRenderer>();
+                    if (renderer != null)
+                    {
+                        renderer.enabled = false;
+                    }
                 }
             }
             enemyPaths.Add(path);
@@ -266,6 +272,20 @@ public class MeshGenerator : MonoBehaviour
             }
         }
     }
+
+    public float GetHeightAtPosition(float x, float z)
+    {
+        // Convert world position to nearest vertex in the mesh
+        int ix = Mathf.Clamp(Mathf.RoundToInt(x), 0, xSize);
+        int iz = Mathf.Clamp(Mathf.RoundToInt(z), 0, zSize);
+        int index = iz * (xSize + 1) + ix;
+
+        if (vertices != null && index >= 0 && index < vertices.Length)
+            return vertices[index].y;
+
+        return 0f; // fallback
+    }
+
 }
 [System.Serializable]
 public class EnemyPath

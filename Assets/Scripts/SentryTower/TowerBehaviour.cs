@@ -4,63 +4,69 @@ using UnityEngine;
 
 public class TowerBehaviour : MonoBehaviour
 {
+    // These are now public fields
+    public float Range;
     public LayerMask EnemiesLayer;
+
+    // Other public variables
     public EnemyMovement Target;
     public Transform TowerPivot;
     public float Damage;
     public float FireRate;
-    public float Range;
 
-    private float Delay;
+    private float delay;
     private float fireTimer;
     private LineRenderer lineRenderer;
 
     void Start()
     {
-        Delay = 1f / FireRate;
+        delay = 1f / FireRate;
         lineRenderer = GetComponent<LineRenderer>();
-        lineRenderer.enabled = false;
+        if (lineRenderer != null)
+        {
+            lineRenderer.enabled = false;
+        }
     }
 
     void Update()
     {
-        fireTimer += Time.deltaTime;
-
-        if (Target == null || Target.Health <= 0 || !Target.gameObject.activeSelf)
+        if (Target == null || Target.Health <= 0 || !Target.gameObject.activeSelf || Vector3.Distance(transform.position, Target.transform.position) > Range)
         {
+            // Now correctly calling the GetTarget overload for TowerBehaviour
             Target = TowerTargetting.GetTarget(this, TowerTargetting.TargetType.First);
             if (Target == null)
             {
-                lineRenderer.enabled = false;
+                if (lineRenderer != null) lineRenderer.enabled = false;
                 return;
             }
         }
 
-        if (Vector3.Distance(transform.position, Target.transform.position) > Range)
-        {
-            Target = null;
-            lineRenderer.enabled = false;
-            return;
-        }
-
-        lineRenderer.enabled = true;
-        lineRenderer.SetPosition(0, TowerPivot.position);
-        lineRenderer.SetPosition(1, Target.transform.position);
-
-        // Aim at the target
-        if (TowerPivot != null)
+        if (TowerPivot != null && Target != null)
         {
             Vector3 direction = Target.transform.position - TowerPivot.position;
-            direction.y = 0; // Prevent looking up/down if you want a flat aim
+            direction.y = 0;
             TowerPivot.rotation = Quaternion.LookRotation(direction);
         }
 
-        // Attack logic
         fireTimer += Time.deltaTime;
-        if (fireTimer >= Delay)
+        if (fireTimer >= delay && Target != null)
         {
-            Target.TakeDamage(Damage); // Deal damage directly
+            Target.TakeDamage(Damage);
             fireTimer = 0f;
+
+            if (lineRenderer != null)
+            {
+                StartCoroutine(FireLaser());
+            }
         }
+    }
+
+    IEnumerator FireLaser()
+    {
+        lineRenderer.enabled = true;
+        lineRenderer.SetPosition(0, TowerPivot.position);
+        lineRenderer.SetPosition(1, Target.transform.position);
+        yield return new WaitForSeconds(0.1f);
+        lineRenderer.enabled = false;
     }
 }

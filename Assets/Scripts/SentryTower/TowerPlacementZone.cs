@@ -8,10 +8,12 @@ public class TowerPlacementZone : MonoBehaviour
     public GameObject tower;
     public LayerMask placemenCollideMask;
     public LayerMask placementcheckMask;
-    public int TowerCost = 50; // Cost of the tower to be placed
+    public int TowerCost = 50;
 
     private GameObject CurrentPlacingTower;
     private GameLoop gameLoop;
+    public MeshGenerator meshGen; // drag your terrain GameObject here in the inspector
+
 
     void Start()
     {
@@ -43,6 +45,14 @@ public class TowerPlacementZone : MonoBehaviour
             if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, placemenCollideMask))
             {
                 Vector3 placePosition = hitInfo.point;
+
+                // Get the correct Y (height) from the terrain mesh
+                if (meshGen != null)
+                {
+                    float terrainHeight = meshGen.GetHeightAtPosition(placePosition.x, placePosition.z);
+                    placePosition.y = terrainHeight;
+                }
+
                 CurrentPlacingTower.transform.position = placePosition;
 
                 BoxCollider towerCollider = CurrentPlacingTower.GetComponentInChildren<BoxCollider>();
@@ -67,4 +77,6 @@ public class TowerPlacementZone : MonoBehaviour
             }
         }
     }
+
+
 }

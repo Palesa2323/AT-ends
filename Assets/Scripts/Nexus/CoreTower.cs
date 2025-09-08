@@ -1,15 +1,21 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System.Collections.Generic;
 
 public class CoreTower : MonoBehaviour
 {
     public float MaxHealth = 100f;
     public float CurrentHealth;
-    public float damageAmount = 10f;
 
     public Slider healthSlider;
-    public Image healthFill; // Drag the Fill component here
+    public Image healthFill;
+
+    // These are now public fields
+    public float Range;
+    public LayerMask EnemiesLayer;
+    public float Damage;
+    public float FireRate;
+
+    public float damageAmount = 10f; // Separate from attack damage
 
     void Start()
     {
@@ -20,7 +26,6 @@ public class CoreTower : MonoBehaviour
             healthSlider.value = CurrentHealth;
         }
 
-        // Set initial color to green
         if (healthFill != null)
         {
             healthFill.color = Color.green;
@@ -30,7 +35,6 @@ public class CoreTower : MonoBehaviour
     public void TakeDamage(float damage)
     {
         CurrentHealth -= damage;
-        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
 
         if (healthSlider != null)
         {
@@ -48,7 +52,6 @@ public class CoreTower : MonoBehaviour
             FindFirstObjectByType<GameLoop>().GameOver();
         }
     }
-
 
     void OnTriggerEnter(Collider other)
     {

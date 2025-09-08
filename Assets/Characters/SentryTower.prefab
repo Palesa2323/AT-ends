@@ -225,9 +225,9 @@ MonoBehaviour:
     m_Bits: 64
   Target: {fileID: 0}
   TowerPivot: {fileID: 3582840762583411737}
-  Damage: 0
-  FireRate: 0
-  Range: 0
+  Damage: 3
+  FireRate: 2
+  Range: 3
 --- !u!120 &8111427267234060306
 LineRenderer:
   serializedVersion: 2

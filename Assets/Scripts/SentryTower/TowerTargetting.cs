@@ -1,8 +1,7 @@
-﻿using Unity.Collections;
-using Unity.Jobs;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerTargetting
+public static class TowerTargetting
 {
     public enum TargetType
     {
@@ -11,142 +10,104 @@ public class TowerTargetting
         Close,
     }
 
-    public static EnemyMovement GetTarget(TowerBehaviour CurrentTower, TargetType TargetMethod)
+    public static EnemyMovement GetTarget(TowerBehaviour currentTower, TargetType TargetMethod)
     {
-        Collider[] EnemiesInRange = Physics.OverlapSphere(CurrentTower.transform.position, CurrentTower.Range, CurrentTower.EnemiesLayer);
-        if (EnemiesInRange.Length == 0) return null;
+        Collider[] enemiesInRange = Physics.OverlapSphere(currentTower.transform.position, currentTower.Range, currentTower.EnemiesLayer);
+        if (enemiesInRange.Length == 0) return null;
 
-        NativeArray<EnemyData> EnemiesToCalculate = new NativeArray<EnemyData>(EnemiesInRange.Length, Allocator.TempJob);
+        EnemyMovement bestTarget = null;
+        float bestValue = (TargetMethod == TargetType.Last) ? Mathf.NegativeInfinity : Mathf.Infinity;
 
-        for (int i = 0; i < EnemiesInRange.Length; i++)
+        foreach (Collider collider in enemiesInRange)
         {
-            EnemyMovement currentEnemy = EnemiesInRange[i].GetComponentInParent<EnemyMovement>();
+            EnemyMovement currentEnemy = collider.GetComponent<EnemyMovement>();
             if (currentEnemy == null) continue;
 
-            EnemiesToCalculate[i] = new EnemyData(
-                currentEnemy.transform.position,
-                currentEnemy.NodeIndex,
-                currentEnemy.Health,
-                currentEnemy.GetInstanceID()
-            );
-        }
-
-        NativeReference<int> enemyID = new NativeReference<int>(-1, Allocator.TempJob);
-        NativeReference<float> compareValue = new NativeReference<float>(0, Allocator.TempJob);
-
-        if (TargetMethod == TargetType.Last)
-        {
-            compareValue.Value = Mathf.NegativeInfinity;
-        }
-        else
-        {
-            compareValue.Value = Mathf.Infinity;
-        }
-
-        SearchForEnemy EnemySearchJob = new SearchForEnemy
-        {
-            _EnemiesToCalculate = EnemiesToCalculate,
-            _NodePositions = new NativeArray<Vector3>(GameLoop.NodePositions, Allocator.TempJob),
-            _NodeDistances = new NativeArray<float>(GameLoop.NodeDistance, Allocator.TempJob),
-            TowerPosition = CurrentTower.transform.position,
-            _EnemyToIndex = enemyID,
-            _CompareValue = compareValue,
-            TargetingType = (int)TargetMethod
-        };
-
-        JobHandle SearchJobHandle = EnemySearchJob.Schedule(EnemiesToCalculate.Length, 1);
-        SearchJobHandle.Complete();
-
-        int resultID = enemyID.Value;
-        EnemyMovement finalTarget = null;
-        if (resultID != -1)
-        {
-            foreach (var enemy in EntitySummoner.EnemiesInGame)
-            {
-                if (enemy != null && enemy.GetInstanceID() == resultID)
-                {
-                    finalTarget = enemy;
-                    break;
-                }
-            }
-        }
-
-        EnemiesToCalculate.Dispose();
-        EnemySearchJob._NodePositions.Dispose();
-        EnemySearchJob._NodeDistances.Dispose();
-        enemyID.Dispose();
-        compareValue.Dispose();
-
-        return finalTarget;
-    }
-
-    struct EnemyData
-    {
-        public EnemyData(Vector3 position, int waypointIndex, float hp, int instanceID)
-        {
-            EnemyPosition = position;
-            WaypointIndex = waypointIndex;
-            Health = hp;
-            InstanceID = instanceID;
-        }
-        public Vector3 EnemyPosition;
-        public int WaypointIndex;
-        public float Health;
-        public int InstanceID;
-    }
-
-    struct SearchForEnemy : IJobParallelFor
-    {
-        [ReadOnly] public NativeArray<EnemyData> _EnemiesToCalculate;
-        [ReadOnly] public NativeArray<Vector3> _NodePositions;
-        [ReadOnly] public NativeArray<float> _NodeDistances;
-        [ReadOnly] public Vector3 TowerPosition;
-
-        public NativeReference<int> _EnemyToIndex;
-        public NativeReference<float> _CompareValue;
-
-        [ReadOnly] public int TargetingType;
-
-        public void Execute(int index)
-        {
             float currentValue = 0;
-            switch (TargetingType)
+            switch (TargetMethod)
             {
-                case 0: // First
-                    currentValue = GetDistanceToEnd(_EnemiesToCalculate[index]);
-                    if (currentValue < _CompareValue.Value)
+                case TargetType.First:
+                    currentValue = GetDistanceToEnd(currentEnemy);
+                    if (currentValue < bestValue)
                     {
-                        _EnemyToIndex.Value = _EnemiesToCalculate[index].InstanceID;
-                        _CompareValue.Value = currentValue;
+                        bestValue = currentValue;
+                        bestTarget = currentEnemy;
                     }
                     break;
-                case 1: // Last
-                    currentValue = GetDistanceToEnd(_EnemiesToCalculate[index]);
-                    if (currentValue > _CompareValue.Value)
+                case TargetType.Last:
+                    currentValue = GetDistanceToEnd(currentEnemy);
+                    if (currentValue > bestValue)
                     {
-                        _EnemyToIndex.Value = _EnemiesToCalculate[index].InstanceID;
-                        _CompareValue.Value = currentValue;
+                        bestValue = currentValue;
+                        bestTarget = currentEnemy;
                     }
                     break;
-                case 2: // Close
-                    currentValue = Vector3.Distance(TowerPosition, _EnemiesToCalculate[index].EnemyPosition);
-                    if (currentValue < _CompareValue.Value)
+                case TargetType.Close:
+                    currentValue = Vector3.Distance(currentTower.transform.position, currentEnemy.transform.position);
+                    if (currentValue < bestValue)
                     {
-                        _EnemyToIndex.Value = _EnemiesToCalculate[index].InstanceID;
-                        _CompareValue.Value = currentValue;
+                        bestValue = currentValue;
+                        bestTarget = currentEnemy;
                     }
                     break;
             }
         }
+        return bestTarget;
+    }
 
-        private float GetDistanceToEnd(EnemyData EnemyToEvaluate)
+    public static EnemyMovement GetTarget(CoreTower coreTower, TargetType TargetMethod)
+    {
+        Collider[] enemiesInRange = Physics.OverlapSphere(coreTower.transform.position, coreTower.Range, coreTower.EnemiesLayer);
+        if (enemiesInRange.Length == 0) return null;
+
+        EnemyMovement bestTarget = null;
+        float bestValue = (TargetMethod == TargetType.Last) ? Mathf.NegativeInfinity : Mathf.Infinity;
+
+        foreach (Collider collider in enemiesInRange)
         {
-            float FinalDistance = Vector3.Distance(EnemyToEvaluate.EnemyPosition, _NodePositions[EnemyToEvaluate.WaypointIndex]);
-            for (int i = EnemyToEvaluate.WaypointIndex; i < _NodeDistances.Length; i++)
+            EnemyMovement currentEnemy = collider.GetComponent<EnemyMovement>();
+            if (currentEnemy == null) continue;
+
+            float currentValue = 0;
+            switch (TargetMethod)
             {
-                FinalDistance += _NodeDistances[i];
+                case TargetType.First:
+                    currentValue = GetDistanceToEnd(currentEnemy);
+                    if (currentValue < bestValue)
+                    {
+                        bestValue = currentValue;
+                        bestTarget = currentEnemy;
+                    }
+                    break;
+                case TargetType.Last:
+                    currentValue = GetDistanceToEnd(currentEnemy);
+                    if (currentValue > bestValue)
+                    {
+                        bestValue = currentValue;
+                        bestTarget = currentEnemy;
+                    }
+                    break;
+                case TargetType.Close:
+                    currentValue = Vector3.Distance(coreTower.transform.position, currentEnemy.transform.position);
+                    if (currentValue < bestValue)
+                    {
+                        bestValue = currentValue;
+                        bestTarget = currentEnemy;
+                    }
+                    break;
             }
-            return FinalDistance;
         }
+        return bestTarget;
+    }
+
+    private static float GetDistanceToEnd(EnemyMovement enemy)
+    {
+        // This method remains the same
+        float finalDistance = Vector3.Distance(enemy.transform.position, GameLoop.NodePositions[enemy.NodeIndex]);
+        for (int i = enemy.NodeIndex; i < GameLoop.NodeDistance.Length; i++)
+        {
+            finalDistance += GameLoop.NodeDistance[i];
+        }
+        return finalDistance;
     }
 }
