@@ -10,10 +10,10 @@ public class MeshGenerator : MonoBehaviour
     int[] triangles;
     Color[] colors;
 
-    public int xSize = 100; // Change this from 20 to a larger number
+    public int xSize = 200; // Change this from 20 to a larger number
     public int zSize = 100; // Change this from 20 to a larger number
     public Gradient gradient;
-    public MeshFilter meshFilter; // Make this a public variable
+    public MeshFilter meshFilter;
     private MeshCollider meshCollider;
 
     // NEW: Path Color

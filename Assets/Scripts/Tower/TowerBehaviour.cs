@@ -4,11 +4,10 @@ using UnityEngine;
 
 public class TowerBehaviour : MonoBehaviour
 {
-    // These are now public fields
+    
     public float Range;
     public LayerMask EnemiesLayer;
 
-    // Other public variables
     public EnemyMovement Target;
     public Transform TowerPivot;
     public float Damage;

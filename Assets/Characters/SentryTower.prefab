@@ -220,14 +220,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bae9c0b3628ec4f4ea0222225b427c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Range: 70
   EnemiesLayer:
     serializedVersion: 2
     m_Bits: 64
   Target: {fileID: 0}
   TowerPivot: {fileID: 3582840762583411737}
-  Damage: 3
-  FireRate: 2
-  Range: 3
+  Damage: 2
+  FireRate: 3
 --- !u!120 &8111427267234060306
 LineRenderer:
   serializedVersion: 2

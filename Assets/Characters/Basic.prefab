@@ -50,7 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MaxHealth: 12
   Health: 10
-  Speed: 1
+  Speed: 0.5
   ID: 0
   NodeIndex: 0
   resourcesToAward: 20

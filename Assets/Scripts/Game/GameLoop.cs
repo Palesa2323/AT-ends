@@ -7,7 +7,7 @@ public class GameLoop : MonoBehaviour
 {
     public Transform NodeParent;
     
-    private TMPro.TextMeshProUGUI resourceText;
+    public TextMeshProUGUI resourceText;
     public GameObject gameOverPanel;
     public GameObject winPanel; // Add a new public variable for the win screen
     
