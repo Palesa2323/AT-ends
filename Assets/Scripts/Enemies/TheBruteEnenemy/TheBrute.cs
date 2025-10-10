@@ -5,20 +5,19 @@ using System.Collections;
 public class Brute : MonoBehaviour
 {
     [Header("Brute Stats")]
-    public float health = 30f;      // High Health
-    public float speed = 1.5f;      // Slow Speed
-    public float damage = 5f;       // High Damage
-    public float attackRange = 1f;
+    public float health = 30f;       // High Health
+    public float speed = 1.5f;       // Slow Speed
+    public float damage = 5f;        // High Damage
+    public float attackRange = 1.2f; // Slightly extended for big enemies
     public float attackCooldown = 2f;
 
     private NavMeshAgent agent;
-    private CoreTower nexusTarget;
+    private CoreTower coreTower;
     private float nextAttackTime;
-    private GameLoop gameLoop; // Reference to the GameLoop
+    private GameLoop gameLoop;
 
     void Awake()
     {
-        // Find the single GameLoop instance to handle resource updates
         gameLoop = FindFirstObjectByType<GameLoop>();
         if (gameLoop == null)
         {
@@ -29,56 +28,55 @@ public class Brute : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        if (agent == null)
+        {
+            Debug.LogError("Brute needs a NavMeshAgent component.");
+            return;
+        }
+
         agent.speed = speed;
+        coreTower = FindFirstObjectByType<CoreTower>();
 
-        // Find the CoreTower
-        nexusTarget = FindFirstObjectByType<CoreTower>();
-
-        // Coroutine ensures NavMeshAgent is active before setting destination
         StartCoroutine(SetInitialDestination());
     }
 
     IEnumerator SetInitialDestination()
     {
-        yield return null; // Wait one frame for the agent to initialize
+        yield return null;
 
-        if (nexusTarget != null && agent.isActiveAndEnabled)
+        if (coreTower != null && agent.isActiveAndEnabled)
         {
-            agent.SetDestination(nexusTarget.transform.position);
+            agent.SetDestination(coreTower.transform.position);
         }
     }
 
     void Update()
     {
-        if (nexusTarget == null) return;
+        if (coreTower == null) return;
 
-        // The Brute always targets the CoreTower, ignoring all Sentry Towers.
-        float distanceToNexus = Vector3.Distance(transform.position, nexusTarget.transform.position);
+        float distanceToCore = Vector3.Distance(transform.position, coreTower.transform.position);
 
-        if (distanceToNexus <= attackRange)
+        if (distanceToCore <= attackRange)
         {
-            // Stop movement and attack the CoreTower
             agent.isStopped = true;
-            AttackNexus();
+            AttackCore();
         }
         else
         {
-            // Resume movement towards the CoreTower
             agent.isStopped = false;
-            agent.SetDestination(nexusTarget.transform.position);
+            agent.SetDestination(coreTower.transform.position);
         }
     }
 
-    void AttackNexus()
+    void AttackCore()
     {
         if (Time.time >= nextAttackTime)
         {
-            nexusTarget.TakeDamage(damage);
+            coreTower.TakeDamage(damage);
             nextAttackTime = Time.time + attackCooldown;
         }
     }
 
-    // Public method required by SentryTower, Barracks, and SnipeTower
     public void TakeDamage(float amount)
     {
         health -= amount;
@@ -90,11 +88,17 @@ public class Brute : MonoBehaviour
 
     void Die()
     {
-        // Reward the player with resources (shards) upon defeat by calling the GameLoop method
-        gameLoop?.AddResources(5);
-
-        // Removed code that communicated with the WaveManager system.
+        if (gameLoop != null)
+        {
+            gameLoop.AddResources(10); // Brutes drop more resources since they’re tanky
+        }
 
         Destroy(gameObject);
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }
