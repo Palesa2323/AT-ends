@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMovement : MonoBehaviour
+public class EnemyMovement : MonoBehaviour, ITakeDamage
 {
     // New Enum to distinguish enemy types in code
     public enum EnemyType { Normal, Runner, Healer }
@@ -28,7 +28,7 @@ public class EnemyMovement : MonoBehaviour
     private int currentWaypointIndex = 0;
     private Rigidbody rb;
     private CoreTower coreTower;
-    private EnemyHealthBar healthBar;
+    public EnemyHealthBar healthBar;
     private EnemyAttack enemyAttack;
     private ITakeDamage currentTargetDamageable;
     private Transform currentTargetTransform;

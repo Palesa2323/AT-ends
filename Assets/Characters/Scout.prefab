@@ -12,7 +12,10 @@ GameObject:
   - component: {fileID: 1324530375871389400}
   - component: {fileID: 577076038849606668}
   - component: {fileID: 1085745889318676102}
-  m_Layer: 0
+  - component: {fileID: -7246654278705055064}
+  - component: {fileID: -6490550874533914778}
+  - component: {fileID: -7465236233859588222}
+  m_Layer: 6
   m_Name: Scout
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -110,3 +113,68 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
+--- !u!114 &-7246654278705055064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036119774019027390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 310103881c2ca2e4e8d579048d5af405, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 150
+  Health: 0
+  Speed: 1
+  ID: 0
+  resourcesToAward: 15
+  damageToCore: 0
+  AttackRange: 2
+  TowerLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  HealRadius: 5
+  HealAmount: 10
+--- !u!114 &-6490550874533914778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036119774019027390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e47bd9e4e84956a488e8e33fe4726b91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthSliderPrefab: {fileID: 0}
+  offset: {x: 0, y: 2, z: 0}
+--- !u!54 &-7465236233859588222
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2036119774019027390}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

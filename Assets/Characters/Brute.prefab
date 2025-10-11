@@ -12,7 +12,8 @@ GameObject:
   - component: {fileID: 2066570023234160966}
   - component: {fileID: 5045291442650118707}
   - component: {fileID: -8051376308146611841}
-  m_Layer: 0
+  - component: {fileID: 5168793923680067807}
+  m_Layer: 6
   m_Name: Brute
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,3 +115,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &5168793923680067807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 956195029893660759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 772532c6a7e472144b926be82885a9fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 50
+  Health: 0
+  Speed: 3
+  ID: 0
+  resourcesToAward: 5
+  damageToCore: 10
+  AttackRange: 2
+  TowerLayer:
+    serializedVersion: 2
+    m_Bits: 0

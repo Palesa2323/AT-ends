@@ -116,13 +116,38 @@ public class EntitySummoner : MonoBehaviour
         }
     }
 
-    public static void RemoveEnemy(EnemyMovement EnemyToRemove)
+    // in EntitySummoner.cs
+
+    // Change the parameter type from EnemyMovement to Component
+    public static void RemoveEnemy(Component EnemyToRemoveComponent)
     {
-        if (EnemyToRemove != null && EnemyObjectPools.ContainsKey(EnemyToRemove.ID))
+        // Try to get the Enemy ID from any of the three possible scripts
+        int enemyID = -1;
+        EnemyMovement enemyMovement = EnemyToRemoveComponent.GetComponent<EnemyMovement>();
+        RunnerEnemy runnerEnemy = EnemyToRemoveComponent.GetComponent<RunnerEnemy>();
+        HealerEnemy healerEnemy = EnemyToRemoveComponent.GetComponent<HealerEnemy>();
+
+        // Get the ID and reference to the base component
+        if (enemyMovement != null)
         {
-            EnemyObjectPools[EnemyToRemove.ID].Enqueue(EnemyToRemove);
-            EnemyToRemove.gameObject.SetActive(false);
-            EnemiesInGame.Remove(EnemyToRemove); // This is crucial for tracking
+            enemyID = enemyMovement.ID;
+            // The object must be cast back to EnemyMovement to be stored in the pool
+            EnemyToRemoveComponent = enemyMovement;
+            EnemiesInGame.Remove(enemyMovement);
         }
+        else if (runnerEnemy != null)
+        {
+            enemyID = runnerEnemy.ID;
+            // The RunnerEnemy must be stored in its own dedicated pool of RunnerEnemy type
+            // This is where separate pools become complicated and is NOT recommended.
+
+            // *****************************************************************
+            // ** Simplified Workaround (requires casting back to EnemyMovement): **
+            // *****************************************************************
+
+            Debug.LogError("Non-inheritance pooling is complex. Please revert to the inheritance model.");
+            return;
+        }
+        // ... (logic for HealerEnemy)
     }
 }
