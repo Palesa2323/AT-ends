@@ -127,6 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 772532c6a7e472144b926be82885a9fb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 0
   MaxHealth: 50
   Health: 0
   Speed: 3
@@ -137,3 +138,6 @@ MonoBehaviour:
   TowerLayer:
     serializedVersion: 2
     m_Bits: 0
+  HealRadius: 5
+  HealAmount: 10
+  healthBar: {fileID: 0}

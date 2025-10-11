@@ -125,6 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310103881c2ca2e4e8d579048d5af405, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 0
   MaxHealth: 150
   Health: 0
   Speed: 1
@@ -137,6 +138,7 @@ MonoBehaviour:
     m_Bits: 0
   HealRadius: 5
   HealAmount: 10
+  healthBar: {fileID: 0}
 --- !u!114 &-6490550874533914778
 MonoBehaviour:
   m_ObjectHideFlags: 0
