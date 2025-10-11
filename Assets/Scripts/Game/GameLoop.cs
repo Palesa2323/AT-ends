@@ -6,42 +6,38 @@ using TMPro;
 public class GameLoop : MonoBehaviour
 {
     public Transform NodeParent;
-    
+
     public TextMeshProUGUI resourceText;
     public GameObject gameOverPanel;
-    public GameObject winPanel; // Add a new public variable for the win screen
-    
+    public GameObject winPanel;
+
     public static int Resources = 100;
-    
+
     public CoreTower coreTower;
-    
+
     public static Vector3[] NodePositions;
     public static float[] NodeDistance;
     public static List<TowerBehaviour> TowersInGame;
 
     private MeshGenerator meshGenerator;
-    public int maxEnemiesToSpawn = 50; // The total number of enemies to spawn
-    private int enemiesSpawned = 0; // Tracks the number of enemies spawned
+
+    // Track total enemies across all waves
+    private int totalEnemiesSpawned;
+    private bool wavesFinished;
 
     void Start()
     {
-        resourceText = FindFirstObjectByType<TMPro.TextMeshProUGUI>();
+        resourceText = FindFirstObjectByType<TextMeshProUGUI>();
         if (resourceText == null)
         {
             Debug.LogError("No TextMeshProUGUI component found for resources.");
         }
 
         TowersInGame = new List<TowerBehaviour>();
-        EntitySummoner.Init();
+        EntitySummoner.Init(); // initializes all enemies via ScriptableObjects
 
-        if (gameOverPanel != null)
-        {
-            gameOverPanel.SetActive(false);
-        }
-        if (winPanel != null)
-        {
-            winPanel.SetActive(false);
-        }
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
+        if (winPanel != null) winPanel.SetActive(false);
 
         if (NodeParent != null)
         {
@@ -68,7 +64,6 @@ public class GameLoop : MonoBehaviour
         }
 
         meshGenerator = FindFirstObjectByType<MeshGenerator>();
-
         if (meshGenerator == null)
         {
             Debug.LogError("MeshGenerator not found in the scene.");
@@ -92,7 +87,7 @@ public class GameLoop : MonoBehaviour
         Resources += amount;
         UpdateResourceUI();
     }
-    
+
     public void DeductCost(int amount)
     {
         Resources -= amount;
@@ -102,45 +97,75 @@ public class GameLoop : MonoBehaviour
     public void GameOver()
     {
         Time.timeScale = 0;
-        if (gameOverPanel != null)
-        {
-            gameOverPanel.SetActive(true);
-        }
+        if (gameOverPanel != null) gameOverPanel.SetActive(true);
     }
 
     public void YouWin()
     {
         Time.timeScale = 0;
-        if (winPanel != null)
-        {
-            winPanel.SetActive(true);
-        }
+        if (winPanel != null) winPanel.SetActive(true);
     }
 
+    // --- MULTI-TYPE WAVE SYSTEM ---
     IEnumerator WaveManager()
     {
-        while (enemiesSpawned < maxEnemiesToSpawn)
+        // --- Wave 1 ---
+        yield return StartCoroutine(SpawnWave(new (int id, int count, float interval)[]
         {
-            if (meshGenerator.enemyPaths.Count > 0)
-            {
-                int randomIndex = Random.Range(0, meshGenerator.enemyPaths.Count);
-                List<Vector3> selectedPath = meshGenerator.enemyPaths[randomIndex].waypoints;
+            (0, 8, 0.6f), // 8 Normal enemies
+            (1, 5, 0.5f)  // 5 Runners
+        }));
 
-                EnemyMovement newEnemy = EntitySummoner.SummonEnemy(0);
+        yield return new WaitForSeconds(5f); // small pause between waves
 
-                if (newEnemy != null)
-                {
-                    newEnemy.Init(selectedPath, coreTower);
-                    enemiesSpawned++; // Increment the counter
-                }
-            }
-            yield return new WaitForSeconds(1f);
-        }
-        
-        // After all enemies have been spawned, check if the core tower is still alive
+        // --- Wave 2 ---
+        yield return StartCoroutine(SpawnWave(new (int id, int count, float interval)[]
+        {
+            (1, 8, 0.45f), // 8 Runners
+            (2, 3, 1.0f)   // 3 Healers
+        }));
+
+        yield return new WaitForSeconds(5f);
+
+        // --- Wave 3 (mixed finale) ---
+        yield return StartCoroutine(SpawnWave(new (int id, int count, float interval)[]
+        {
+            (0, 6, 0.6f),
+            (1, 6, 0.5f),
+            (2, 4, 1.0f)
+        }));
+
+        wavesFinished = true;
+
+        // When waves are done, check if you survived
+        yield return new WaitForSeconds(5f);
         if (coreTower.CurrentHealth > 0)
         {
             YouWin();
+        }
+    }
+
+    IEnumerator SpawnWave((int id, int count, float interval)[] entries)
+    {
+        foreach (var entry in entries)
+        {
+            for (int i = 0; i < entry.count; i++)
+            {
+                if (meshGenerator.enemyPaths.Count > 0)
+                {
+                    int randomIndex = Random.Range(0, meshGenerator.enemyPaths.Count);
+                    List<Vector3> selectedPath = meshGenerator.enemyPaths[randomIndex].waypoints;
+
+                    EnemyMovement newEnemy = EntitySummoner.SummonEnemy(entry.id);
+                    if (newEnemy != null)
+                    {
+                        newEnemy.Init(selectedPath, coreTower);
+                        totalEnemiesSpawned++;
+                    }
+                }
+
+                yield return new WaitForSeconds(entry.interval);
+            }
         }
     }
 }
