@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Assumes ITakeDamage interface is defined elsewhere
-public abstract class TowerBehaviour : MonoBehaviour, ITakeDamage
+public abstract class TowerBehaviour : MonoBehaviour
 {
     // CORE PUBLIC STATS (Set in Inspector)
     public float Range = 10f;

@@ -3,13 +3,16 @@ using UnityEngine;
 
 public class EntitySummoner : MonoBehaviour
 {
+    // Keeps track of active enemies
     public static List<EnemyMovement> EnemiesInGame = new List<EnemyMovement>();
+
+    // Stores enemy prefab references by ID
     public static Dictionary<int, GameObject> EnemyPrefabs = new Dictionary<int, GameObject>();
+
+    // Object pools for reusing inactive enemies
     public static Dictionary<int, Queue<EnemyMovement>> EnemyObjectPools = new Dictionary<int, Queue<EnemyMovement>>();
 
     private static bool IsInitialized = false;
-
-    // An instance reference to call coroutines from outside
     private static EntitySummoner instance;
 
     private void Awake()
@@ -25,129 +28,129 @@ public class EntitySummoner : MonoBehaviour
         }
     }
 
+    // Initializes all enemy prefabs and pools
     public static void Init()
     {
-        if (!IsInitialized)
-        {
-            // The path for your ScriptableObjects.
-            EnemySummonData[] Enemies = Resources.LoadAll<EnemySummonData>("Enemies");
-
-            if (Enemies.Length == 0)
-            {
-                Debug.LogError("No EnemySummonData found in Resources/Enemies. Please create a folder and place your ScriptableObjects there.");
-            }
-
-            foreach (EnemySummonData enemy in Enemies)
-            {
-                if (!EnemyPrefabs.ContainsKey(enemy.EnemyID))
-                {
-                    EnemyPrefabs.Add(enemy.EnemyID, enemy.EnemyPrefab);
-                    EnemyObjectPools.Add(enemy.EnemyID, new Queue<EnemyMovement>());
-                }
-            }
-            IsInitialized = true;
-            // NEW: Pre-populate the pools
-            foreach (var enemyData in Enemies)
-            {
-                PrepopulatePool(enemyData.EnemyID, 100); // Change 10 to a desired starting number
-            }
-        }
-        else
+        if (IsInitialized)
         {
             Debug.LogWarning("EntitySummoner is already initialized.");
+            return;
         }
-    }
 
-    // NEW: Method to create and fill the pools
-    private static void PrepopulatePool(int enemyID, int count)
-    {
-        if (EnemyPrefabs.ContainsKey(enemyID))
+        // Load all ScriptableObjects from Resources/Enemies
+        EnemySummonData[] Enemies = Resources.LoadAll<EnemySummonData>("Enemies");
+
+        if (Enemies.Length == 0)
         {
-            for (int i = 0; i < count; i++)
+            Debug.LogError("No EnemySummonData found in Resources/Enemies. Please create them and assign prefabs.");
+            return;
+        }
+
+        // Register prefabs and create pools
+        foreach (EnemySummonData enemy in Enemies)
+        {
+            if (enemy == null || enemy.EnemyPrefab == null)
             {
-                GameObject newEnemy = Instantiate(EnemyPrefabs[enemyID]);
-                EnemyMovement enemyComponent = newEnemy.GetComponent<EnemyMovement>();
-                if (enemyComponent != null)
-                {
-                    enemyComponent.ID = enemyID; // Set the ID for the pooled enemy
-                    enemyComponent.gameObject.SetActive(false);
-                    EnemyObjectPools[enemyID].Enqueue(enemyComponent);
-                }
-                else
-                {
-                    Destroy(newEnemy);
-                }
+                Debug.LogError($"EnemySummonData with ID {enemy?.EnemyID} has a missing prefab reference!");
+                continue;
+            }
+
+            if (!EnemyPrefabs.ContainsKey(enemy.EnemyID))
+            {
+                EnemyPrefabs.Add(enemy.EnemyID, enemy.EnemyPrefab);
+                EnemyObjectPools.Add(enemy.EnemyID, new Queue<EnemyMovement>());
             }
         }
+
+        // Pre-populate each pool with a few instances
+        foreach (var enemyData in Enemies)
+        {
+            PrepopulatePool(enemyData.EnemyID, enemyData.PoolSize);
+        }
+
+        IsInitialized = true;
+        Debug.Log($"EntitySummoner initialized {Enemies.Length} enemy types successfully.");
     }
 
-    public static EnemyMovement SummonEnemy(int EnemyID)
+    // Preload a few instances of each enemy type
+    private static void PrepopulatePool(int enemyID, int count)
     {
-        if (EnemyPrefabs.ContainsKey(EnemyID))
-        {
-            EnemyMovement summonedEnemy = null;
-            Queue<EnemyMovement> referencedQueue = EnemyObjectPools[EnemyID];
+        if (!EnemyPrefabs.ContainsKey(enemyID)) return;
 
-            if (referencedQueue.Count > 0)
+        for (int i = 0; i < count; i++)
+        {
+            GameObject newEnemy = Instantiate(EnemyPrefabs[enemyID]);
+            EnemyMovement enemyComponent = newEnemy.GetComponent<EnemyMovement>();
+
+            if (enemyComponent != null)
             {
-                summonedEnemy = referencedQueue.Dequeue();
-                summonedEnemy.gameObject.SetActive(true);
+                enemyComponent.ID = enemyID;
+                newEnemy.SetActive(false);
+                EnemyObjectPools[enemyID].Enqueue(enemyComponent);
             }
             else
             {
-                GameObject newEnemy = Instantiate(EnemyPrefabs[EnemyID]);
-                summonedEnemy = newEnemy.GetComponent<EnemyMovement>();
-                if (summonedEnemy == null)
-                {
-                    Debug.LogError("The instantiated prefab does not have an EnemyMovement component.");
-                    return null;
-                }
+                Debug.LogError($"Prefab with ID {enemyID} is missing an EnemyMovement component. Check prefab setup.");
+                Destroy(newEnemy);
             }
-
-            // Set the ID, Initialize stats, add to list, and return
-            summonedEnemy.ID = EnemyID;
-            EnemiesInGame.Add(summonedEnemy);
-            return summonedEnemy;
-        }
-        else
-        {
-            Debug.LogError($"Enemy ID {EnemyID} not found in EnemyPrefabs.");
-            return null; // Return null on failure
         }
     }
 
-    // in EntitySummoner.cs
-
-    // Change the parameter type from EnemyMovement to Component
-    public static void RemoveEnemy(Component EnemyToRemoveComponent)
+    // Spawns (or reuses) an enemy based on ID
+    public static EnemyMovement SummonEnemy(int EnemyID)
     {
-        // Try to get the Enemy ID from any of the three possible scripts
-        int enemyID = -1;
-        EnemyMovement enemyMovement = EnemyToRemoveComponent.GetComponent<EnemyMovement>();
-        RunnerEnemy runnerEnemy = EnemyToRemoveComponent.GetComponent<RunnerEnemy>();
-        HealerEnemy healerEnemy = EnemyToRemoveComponent.GetComponent<HealerEnemy>();
-
-        // Get the ID and reference to the base component
-        if (enemyMovement != null)
+        if (!EnemyPrefabs.ContainsKey(EnemyID))
         {
-            enemyID = enemyMovement.ID;
-            // The object must be cast back to EnemyMovement to be stored in the pool
-            EnemyToRemoveComponent = enemyMovement;
-            EnemiesInGame.Remove(enemyMovement);
+            Debug.LogError($"Enemy ID {EnemyID} not found in EnemyPrefabs. Check your EnemySummonData assets.");
+            return null;
         }
-        else if (runnerEnemy != null)
+
+        EnemyMovement summonedEnemy = null;
+        Queue<EnemyMovement> referencedQueue = EnemyObjectPools[EnemyID];
+
+        // Try to reuse from pool
+        if (referencedQueue.Count > 0)
         {
-            enemyID = runnerEnemy.ID;
-            // The RunnerEnemy must be stored in its own dedicated pool of RunnerEnemy type
-            // This is where separate pools become complicated and is NOT recommended.
-
-            // *****************************************************************
-            // ** Simplified Workaround (requires casting back to EnemyMovement): **
-            // *****************************************************************
-
-            Debug.LogError("Non-inheritance pooling is complex. Please revert to the inheritance model.");
-            return;
+            summonedEnemy = referencedQueue.Dequeue();
+            summonedEnemy.gameObject.SetActive(true);
         }
-        // ... (logic for HealerEnemy)
+        else
+        {
+            // Otherwise instantiate a new one
+            GameObject newEnemy = Instantiate(EnemyPrefabs[EnemyID]);
+            summonedEnemy = newEnemy.GetComponent<EnemyMovement>();
+
+            if (summonedEnemy == null)
+            {
+                Debug.LogError($"Enemy prefab for ID {EnemyID} is missing EnemyMovement script.");
+                Destroy(newEnemy);
+                return null;
+            }
+        }
+
+        summonedEnemy.ID = EnemyID;
+        EnemiesInGame.Add(summonedEnemy);
+        return summonedEnemy;
+    }
+
+    // Deactivates an enemy and returns it to the pool
+    public static void RemoveEnemy(EnemyMovement enemy)
+    {
+        if (enemy == null) return;
+
+        int id = enemy.ID;
+
+        if (EnemiesInGame.Contains(enemy))
+            EnemiesInGame.Remove(enemy);
+
+        if (EnemyObjectPools.ContainsKey(id))
+        {
+            enemy.gameObject.SetActive(false);
+            EnemyObjectPools[id].Enqueue(enemy);
+        }
+        else
+        {
+            Destroy(enemy.gameObject);
+        }
     }
 }
