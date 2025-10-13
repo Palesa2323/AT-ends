@@ -224,10 +224,13 @@ MonoBehaviour:
   EnemiesLayer:
     serializedVersion: 2
     m_Bits: 64
-  Target: {fileID: 0}
+  Target: {fileID: 3770443359722776411, guid: 4b05874e4fc31a346a496a79e797f430, type: 3}
   TowerPivot: {fileID: 3582840762583411737}
   Damage: 2
   FireRate: 3
+  delay: 0
+  fireTimer: 0
+  lineRenderer: {fileID: 8111427267234060306}
 --- !u!120 &8111427267234060306
 LineRenderer:
   serializedVersion: 2

@@ -48,13 +48,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd5f46b89bb65e441b3b9c571dc43515, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 0
   MaxHealth: 12
   Health: 10
   Speed: 0.5
   ID: 0
-  NodeIndex: 0
   resourcesToAward: 20
   damageToCore: 20
+  AttackRange: 2
+  TowerLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  HealRadius: 5
+  HealAmount: 10
+  healthBar: {fileID: 0}
 --- !u!54 &7168417001255941858
 Rigidbody:
   m_ObjectHideFlags: 0
