@@ -52,6 +52,7 @@ public class EnemyMovement : MonoBehaviour, ITakeDamage
         if (waypoints != null && waypoints.Count > 0)
         {
             transform.position = waypoints[0];
+            currentWaypointIndex = 1; // Start moving towards the second waypoint
         }
         else
         {

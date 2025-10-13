@@ -5,7 +5,7 @@ public class EnemyAttack : MonoBehaviour
 {
     public float attackDamage = 10f;
     public float attackRate = 1f;
-    public float nextAttackTime = 0f;
+    public float nextAttackTime { get; set; } = 0f;
 
     public Transform AttackOrigin;
     private LineRenderer lineRenderer;
