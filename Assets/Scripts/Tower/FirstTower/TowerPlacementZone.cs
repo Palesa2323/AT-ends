@@ -52,6 +52,11 @@ public class TowerPlacementZone : MonoBehaviour
             currentPlacingTower.transform.position = placePosition;
 
             BoxCollider towerCollider = currentPlacingTower.GetComponentInChildren<BoxCollider>();
+            if (towerCollider == null)
+            {
+                Debug.LogWarning("No BoxCollider found on tower prefab.");
+                return;
+            }
             Vector3 boxCenter = currentPlacingTower.transform.position + towerCollider.center;
             Vector3 halfExtents = towerCollider.size / 2;
 

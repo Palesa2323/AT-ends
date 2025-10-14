@@ -87,8 +87,9 @@ public class EnemyMovement : MonoBehaviour, ITakeDamage
 
         if (currentTargetDamageable != null && currentTargetTransform != null)
         {
-            // Stop and engage target
-            rb.linearVelocity = Vector3.zero;
+            
+            rb.MovePosition(transform.position); // safe no-op to ‘stop’ them
+
 
             Vector3 lookDirection = currentTargetTransform.position - transform.position;
             if (lookDirection != Vector3.zero)
