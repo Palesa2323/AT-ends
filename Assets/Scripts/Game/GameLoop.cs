@@ -25,6 +25,16 @@ public class GameLoop : MonoBehaviour
     private int totalEnemiesSpawned;
     private bool wavesFinished;
 
+
+    [Header("Wave Management")]
+    public int CurrentWave = 0;
+    public float BaseDR_Multiplier = 1.2f;
+
+    [Header("Lane Management")]
+    public Transform[] SpawnLocations; // Assign your three spawn points here
+    private float[] laneThreatRatings; // LTR for Blue, Red, Green lanes
+    private float damageTakenLastInterval = 0f;
+
     void Start()
     {
         resourceText = FindFirstObjectByType<TextMeshProUGUI>();
@@ -168,4 +178,6 @@ public class GameLoop : MonoBehaviour
             }
         }
     }
+
+
 }

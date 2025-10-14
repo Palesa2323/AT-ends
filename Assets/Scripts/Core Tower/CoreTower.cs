@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CoreTower : MonoBehaviour
+public class CoreTower : MonoBehaviour // Ensure this inherits from ITakeDamage if you use that
 {
     public float MaxHealth = 100f;
     public float CurrentHealth;
@@ -9,17 +9,18 @@ public class CoreTower : MonoBehaviour
     public Slider healthSlider;
     public Image healthFill;
 
-    // These are now public fields
-    public float Range;
-    public LayerMask EnemiesLayer;
-    public float Damage;
-    public float FireRate;
+    // Fixed damage amount per enemy reaching the core
+    public const float DamagePerEnemy = 0.5f;
 
-    public float damageAmount = 10f; // Separate from attack damage
+    // Removing: Range, EnemiesLayer, FireRate, Damage (they belong to an attacking tower)
+
+    private GameLoop gameLoop;
 
     void Start()
     {
         CurrentHealth = MaxHealth;
+        gameLoop = FindFirstObjectByType<GameLoop>();
+
         if (healthSlider != null)
         {
             healthSlider.maxValue = MaxHealth;
@@ -32,34 +33,44 @@ public class CoreTower : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage() // Removed float parameter, using fixed DamagePerEnemy instead
     {
-        CurrentHealth -= damage;
+        CurrentHealth -= CoreTower.DamagePerEnemy;
+        CurrentHealth = Mathf.Max(0f, CurrentHealth);
 
         if (healthSlider != null)
         {
-            healthSlider.value = CurrentHealth;
+            healthSlider.value = CurrentHealth; // CRITICAL: Updates the current position
         }
 
         if (healthFill != null)
         {
+            // Updates the color (red to green) based on health ratio
             healthFill.color = Color.Lerp(Color.red, Color.green, CurrentHealth / MaxHealth);
         }
 
+        // --- Game Over Check ---
         if (CurrentHealth <= 0)
         {
             Debug.Log("Core Tower Destroyed! Game Over!");
-            FindFirstObjectByType<GameLoop>().GameOver();
+            if (gameLoop != null)
+            {
+                gameLoop.GameOver(); // Call the game loop's game over method
+            }
+            // Optionally, destroy or deactivate the core visually
+            // gameObject.SetActive(false); 
         }
     }
 
+    // Use this simpler OnTriggerEnter for immediate damage and removal
     void OnTriggerEnter(Collider other)
     {
+        // Check if the collider belongs to an active enemy
         EnemyMovement enemy = other.GetComponent<EnemyMovement>();
-        if (enemy != null)
+        if (enemy != null && enemy.gameObject.activeInHierarchy)
         {
-            TakeDamage(damageAmount);
-            EntitySummoner.RemoveEnemy(enemy);
+            TakeDamage(); // Deduct the fixed 0.5 damage
+            EntitySummoner.RemoveEnemy(enemy); // Remove enemy
         }
     }
 }

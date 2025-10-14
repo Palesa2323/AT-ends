@@ -32,6 +32,8 @@ public class EnemyMovement : MonoBehaviour, ITakeDamage
     private EnemyAttack enemyAttack;
     private ITakeDamage currentTargetDamageable;
     private Transform currentTargetTransform;
+    public CoreTower CoreTower => coreTower;
+    // OR: public CoreTower coreTower;
 
     public void Init(List<Vector3> assignedPath, CoreTower tower)
     {

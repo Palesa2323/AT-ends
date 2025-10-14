@@ -55,7 +55,7 @@ public static class TowerTargetting
         return bestTarget;
     }
 
-    public static EnemyMovement GetTarget(CoreTower coreTower, TargetType TargetMethod)
+    /*public static EnemyMovement GetTarget(CoreTower coreTower, TargetType TargetMethod)
     {
         Collider[] enemiesInRange = Physics.OverlapSphere(coreTower.transform.position, coreTower.Range, coreTower.EnemiesLayer);
         if (enemiesInRange.Length == 0) return null;
@@ -98,14 +98,29 @@ public static class TowerTargetting
             }
         }
         return bestTarget;
-    }
+    }*/
+
+    // In TowerTargetting.cs
 
     private static float GetDistanceToEnd(EnemyMovement enemy)
     {
-        // This method has been updated
-        // You'll need to pass the Enemy's NodeIndex and the global waypoint data
-        // For a simple fix, we'll use a direct distance check, as the global waypoint data is no longer accessible here.
-        // A better long-term solution would be to refactor how path data is stored.
-        return Vector3.Distance(enemy.transform.position, GameObject.FindFirstObjectByType<CoreTower>().transform.position);
+        // Try to get the CoreTower reference from the enemy.
+        // This is a much safer way to find the end point.
+        CoreTower core = enemy.GetComponent<EnemyMovement>().CoreTower; // Assuming CoreTower is exposed via a public property/field in EnemyMovement
+
+        // Fallback if the reference is null (or if you haven't exposed CoreTower in EnemyMovement)
+        if (core == null)
+        {
+            core = GameObject.FindFirstObjectByType<CoreTower>();
+        }
+
+        if (core != null)
+        {
+            // Calculate the straight-line distance to the Core Tower
+            return Vector3.Distance(enemy.transform.position, core.transform.position);
+        }
+
+        // Should not happen if a CoreTower exists
+        return Mathf.Infinity;
     }
 }

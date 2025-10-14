@@ -118,6 +118,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1442706417511329856}
   - component: {fileID: 1548081614230491064}
+  - component: {fileID: -4342840371567321817}
   m_Layer: 0
   m_Name: CoreTower
   m_TagString: Untagged
@@ -154,7 +155,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHealth: 100
-  CurrentHealth: 50
-  damageAmount: 10
-  healthSlider: {fileID: 0}
-  healthFill: {fileID: 0}
+  CurrentHealth: 100
+  healthSlider: {fileID: 3181078376942782057, guid: c3c3b0831bf1b4d4da81d3ce42496aac, type: 3}
+  healthFill: {fileID: 3642732020097125247, guid: 81939d54749c4474b8176a7c24576b8f, type: 3}
+--- !u!65 &-4342840371567321817
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3269139720492153256}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
