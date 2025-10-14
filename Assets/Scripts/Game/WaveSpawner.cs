@@ -1,16 +1,53 @@
 using UnityEngine;
+using System.Collections;
 
 public class WaveSpawner : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private float countdown;
+    [SerializeField] private GameObject spawnPoint;
+    private int currentWaveIndex = 0;
+
+    public Wave[] waves;
+    
+
+    private void Start()
     {
-        
+        for(int i = 0; i < waves.Length; i++)
+        {
+           waves[i].enemiesLeft += waves[i].enemies.Length;
+        }
+    }
+    private void Update()
+    {
+        countdown -= Time.deltaTime;
+        if (countdown <= 0)
+        {
+            countdown = waves[currentWaveIndex].timeToNextWave;
+            StartCoroutine(SpawnWave());
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator SpawnWave()
     {
-        
+       for(int i = 0; i < waves[currentWaveIndex].enemies.Length; i++)
+        {
+
+            Enemy enemy = Instantiate(waves[currentWaveIndex].enemies[i], spawnPoint.transform);
+            enemy.transform.SetParent(spawnPoint.transform);
+
+            yield return new WaitForSeconds(waves[currentWaveIndex].timeToNextEnemy);
+        }
     }
+
+
+}
+
+[System.Serializable]
+
+public class Wave
+{
+    public Enemy[] enemies;
+    public float timeToNextEnemy;
+    public float timeToNextWave;
+    [HideInInspector] public int enemiesLeft;
 }
