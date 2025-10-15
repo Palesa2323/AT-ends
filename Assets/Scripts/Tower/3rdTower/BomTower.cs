@@ -34,9 +34,17 @@ public class BombTower : TowerBehaviour
         {
             Vector3 direction = Target.transform.position - TowerPivot.position;
             direction.y = 0;
-            // Use Quaternion.Slerp for smooth rotation (better than direct assignment)
-            TowerPivot.rotation = Quaternion.Slerp(TowerPivot.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
+
+            if (direction == Vector3.zero)
+                return; // skip rotation if no direction
+
+            TowerPivot.rotation = Quaternion.Slerp(
+                TowerPivot.rotation,
+                Quaternion.LookRotation(direction),
+                Time.deltaTime * 10f
+            );
         }
+
 
         // FIRING LOGIC
         fireTimer += Time.deltaTime;

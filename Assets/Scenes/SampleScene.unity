@@ -1415,9 +1415,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   meshGen: {fileID: 663992236}
-  normalTowerCost: 20
-  cryoTowerCost: 50
-  bombTowerCost: 70
+  normalTowerCost: 10
+  cryoTowerCost: 30
+  bombTowerCost: 50
 --- !u!65 &839723586
 BoxCollider:
   m_ObjectHideFlags: 0
