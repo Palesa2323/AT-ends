@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -4412345580541177940}
   - component: {fileID: 1470171819268240909}
   - component: {fileID: -8133035505682185034}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: CryoTower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -243,7 +243,7 @@ GameObject:
   - component: {fileID: 1807341918366430464}
   - component: {fileID: 9095772378825706694}
   - component: {fileID: 4837480976289439040}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -408,6 +408,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 6b92450f34b3e894abaa72e25bc9e01a, type: 3}
       propertyPath: m_Name
       value: TowerStand
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6b92450f34b3e894abaa72e25bc9e01a, type: 3}
+      propertyPath: m_Layer
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

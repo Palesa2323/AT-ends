@@ -3,14 +3,22 @@ using System.Collections;
 
 public class BombTower : TowerBehaviour
 {
+    // Inherits Damage, FireRate, Range, Target, fireTimer, etc., from TowerBehaviour
+
     [Header("Bomb Settings")]
+    public GameObject ProjectilePrefab; // Must be linked in Inspector
+    public GameObject ExplosionPrefab;  // Must be linked in Inspector
     public float ExplosionRadius = 3f;
 
+    // Use a custom update to handle the projectile launch
     void Update()
     {
+        // TARGETING LOGIC (Same as base class, but includes Healer skip)
         if (Target == null || Target.Health <= 0 || !Target.gameObject.activeSelf || Vector3.Distance(transform.position, Target.transform.position) > Range)
         {
             Target = TowerTargetting.GetTarget(this, TowerTargetting.TargetType.First);
+
+            // This Healer check is redundant if done in TowerTargetting.cs, but harmless here.
             if (Target != null && Target.enemyType == EnemyMovement.EnemyType.Healer)
                 Target = null;
 
@@ -21,42 +29,45 @@ public class BombTower : TowerBehaviour
             }
         }
 
+        // ROTATION LOGIC
         if (TowerPivot != null && Target != null)
         {
             Vector3 direction = Target.transform.position - TowerPivot.position;
             direction.y = 0;
-            TowerPivot.rotation = Quaternion.LookRotation(direction);
+            // Use Quaternion.Slerp for smooth rotation (better than direct assignment)
+            TowerPivot.rotation = Quaternion.Slerp(TowerPivot.rotation, Quaternion.LookRotation(direction), Time.deltaTime * 10f);
         }
 
+        // FIRING LOGIC
         fireTimer += Time.deltaTime;
         if (fireTimer >= delay && Target != null)
         {
-            StartCoroutine(FireBomb(Target.transform.position));
+            // NEW: Fire the dedicated AoE projectile
+            FireAoEProjectile(Target.transform.position);
             fireTimer = 0f;
         }
     }
 
-    IEnumerator FireBomb(Vector3 impactPoint)
+    private void FireAoEProjectile(Vector3 targetPosition)
     {
-        if (lineRenderer != null)
+        if (ProjectilePrefab == null) return;
+
+        // 1. Instantiate the projectile at the tower pivot
+        GameObject projectileGO = Instantiate(ProjectilePrefab, TowerPivot.position, Quaternion.identity);
+
+        // 2. Get the Bomb script component
+        BombProjectile bomb = projectileGO.GetComponent<BombProjectile>();
+
+        if (bomb != null)
         {
-            lineRenderer.enabled = true;
-            lineRenderer.startColor = Color.red;
-            lineRenderer.endColor = Color.yellow;
-            lineRenderer.SetPosition(0, TowerPivot.position);
-            lineRenderer.SetPosition(1, impactPoint);
-            yield return new WaitForSeconds(0.1f);
-            lineRenderer.enabled = false;
+            // 3. Initialize the bomb with the tower's stats
+            // NOTE: We pass EnemiesLayer so the projectile knows what to hit
+            bomb.Init(targetPosition, Damage, ExplosionRadius, ExplosionPrefab, EnemiesLayer);
         }
-
-        yield return new WaitForSeconds(0.2f);
-
-        Collider[] hitEnemies = Physics.OverlapSphere(impactPoint, ExplosionRadius, EnemiesLayer);
-        foreach (Collider hit in hitEnemies)
+        else
         {
-            EnemyMovement e = hit.GetComponent<EnemyMovement>();
-            if (e != null && e.enemyType != EnemyMovement.EnemyType.Healer)
-                e.TakeDamage(Damage);
+            Debug.LogError("ProjectilePrefab is missing the BombProjectile script!");
+            Destroy(projectileGO);
         }
     }
 }
