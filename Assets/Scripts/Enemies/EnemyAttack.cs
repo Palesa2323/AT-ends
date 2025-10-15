@@ -4,7 +4,7 @@ using System.Collections;
 public class EnemyAttack : MonoBehaviour
 {
     public float attackDamage = 10f;
-    public float attackRate = 1f;
+    public float attackRate = 10f;
     public float nextAttackTime { get; set; } = 0f;
 
     public Transform AttackOrigin;
@@ -27,11 +27,13 @@ public class EnemyAttack : MonoBehaviour
 
     public void AttackTarget(ITakeDamage target, Transform targetTransform)
     {
+        if (target == null || targetTransform == null)
+            return;
+
         if (Time.time >= nextAttackTime)
         {
-            target.TakeDamage(attackDamage);
             nextAttackTime = Time.time + 1f / attackRate;
-            StartCoroutine(FireLaser(targetTransform));
+            target.TakeDamage(attackDamage);
         }
     }
 

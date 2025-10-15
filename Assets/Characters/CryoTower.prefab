@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5712593946627860648}
   - component: {fileID: -4412345580541177940}
   - component: {fileID: 1470171819268240909}
+  - component: {fileID: -8133035505682185034}
   m_Layer: 0
   m_Name: CryoTower
   m_TagString: Untagged
@@ -217,6 +218,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &-8133035505682185034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434642995764860507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2314b7cd33fcf57458dc5a8290e39a1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  MaxHealth: 40
 --- !u!1 &4654603938000870424
 GameObject:
   m_ObjectHideFlags: 0

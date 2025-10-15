@@ -41,6 +41,8 @@ public class EnemyMovement : MonoBehaviour, ITakeDamage
         waypoints = assignedPath;
         rb = GetComponent<Rigidbody>();
 
+        rb.isKinematic = true;
+
         coreTower = tower;
         healthBar = GetComponent<EnemyHealthBar>();
         enemyAttack = GetComponent<EnemyAttack>();
@@ -90,7 +92,7 @@ public class EnemyMovement : MonoBehaviour, ITakeDamage
         if (currentTargetDamageable != null && currentTargetTransform != null)
         {
             
-            rb.MovePosition(transform.position); // safe no-op to ‘stop’ them
+            rb.MovePosition(transform.position); // safe no-op to ï¿½stopï¿½ them
 
 
             Vector3 lookDirection = currentTargetTransform.position - transform.position;
@@ -120,10 +122,10 @@ public class EnemyMovement : MonoBehaviour, ITakeDamage
         }
     }
 
-    // NEW: Healer's unique behavior
+   
     private void HealAllies()
     {
-        // Use LayerMask.GetMask("Enemy") assuming you created the "Enemy" layer
+       
         Collider[] enemiesInRange = Physics.OverlapSphere(transform.position, HealRadius, LayerMask.GetMask("Enemy"));
 
         // Use the EnemyAttack timer to control the healing rate
@@ -146,7 +148,7 @@ public class EnemyMovement : MonoBehaviour, ITakeDamage
                         ally.healthBar.SetCurrentHealth(ally.Health);
                     }
 
-                    // Optional: You could trigger a visual effect on the ally here
+                  
                 }
             }
         }
@@ -208,6 +210,21 @@ public class EnemyMovement : MonoBehaviour, ITakeDamage
             if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
             {
                 currentWaypointIndex++;
+
+                if (currentWaypointIndex >= waypoints.Count)
+                {
+                    if (coreTower != null)
+                    {
+                        coreTower.TakeDamage(damageToCore);
+                        Debug.Log($"{name} hit the core for {damageToCore} damage!");
+                    }
+
+                    // Disable enemy before removing it
+                    gameObject.SetActive(false);
+
+                    EntitySummoner.RemoveEnemy(this);
+                    return;
+                }
             }
         }
     }

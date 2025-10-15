@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CoreTower : MonoBehaviour // Ensure this inherits from ITakeDamage if you use that
+public class CoreTower : MonoBehaviour, ITakeDamage
 {
     public float MaxHealth = 100f;
     public float CurrentHealth;
@@ -9,10 +9,8 @@ public class CoreTower : MonoBehaviour // Ensure this inherits from ITakeDamage 
     public Slider healthSlider;
     public Image healthFill;
 
-    // Fixed damage amount per enemy reaching the core
+    // If anyone calls the parameterless version, use this default
     public const float DamagePerEnemy = 0.5f;
-
-    // Removing: Range, EnemiesLayer, FireRate, Damage (they belong to an attacking tower)
 
     private GameLoop gameLoop;
 
@@ -33,33 +31,29 @@ public class CoreTower : MonoBehaviour // Ensure this inherits from ITakeDamage 
         }
     }
 
-    public void TakeDamage() // Removed float parameter, using fixed DamagePerEnemy instead
+    // MAIN overload used by enemies/towers
+    public void TakeDamage(float amount)
     {
-        CurrentHealth -= CoreTower.DamagePerEnemy;
-        CurrentHealth = Mathf.Max(0f, CurrentHealth);
+        CurrentHealth -= amount;
+        CurrentHealth = Mathf.Max(0, CurrentHealth);
 
-        if (healthSlider != null)
-        {
-            healthSlider.value = CurrentHealth; // CRITICAL: Updates the current position
-        }
+        if (healthSlider != null) healthSlider.value = CurrentHealth;
+        if (healthFill != null) healthFill.color = Color.Lerp(Color.red, Color.green, CurrentHealth / MaxHealth);
 
-        if (healthFill != null)
-        {
-            // Updates the color (red to green) based on health ratio
-            healthFill.color = Color.Lerp(Color.red, Color.green, CurrentHealth / MaxHealth);
-        }
-
-        // --- Game Over Check ---
         if (CurrentHealth <= 0)
         {
-            Debug.Log("Core Tower Destroyed! Game Over!");
             if (gameLoop != null)
             {
-                gameLoop.GameOver(); // Call the game loop's game over method
+                Debug.Log("Core Tower destroyed — Game Over.");
+                gameLoop.GameOver();
             }
-            // Optionally, destroy or deactivate the core visually
-            // gameObject.SetActive(false); 
         }
+    }
+
+    // Backward-compatible wrapper (in case something still calls TakeDamage())
+    public void TakeDamage()
+    {
+        TakeDamage(DamagePerEnemy);
     }
 
     // Use this simpler OnTriggerEnter for immediate damage and removal
@@ -73,4 +67,5 @@ public class CoreTower : MonoBehaviour // Ensure this inherits from ITakeDamage 
             EntitySummoner.RemoveEnemy(enemy); // Remove enemy
         }
     }
+
 }

@@ -16,9 +16,9 @@ public class MeshGenerator : MonoBehaviour
     public MeshFilter meshFilter;
     private MeshCollider meshCollider;
 
-    // NEW: Path Color
-    public Color pathColor = Color.grey; // You can change this in the Inspector
-    public float pathWidth = 2f; // Keep this public for the path flattening logic
+  
+    public Color pathColor = Color.grey; 
+    public float pathWidth = 2f; 
 
 
     float minTerrainHeight;
@@ -30,7 +30,7 @@ public class MeshGenerator : MonoBehaviour
 
     // Enemy path stuff
     public List<EnemyPath> enemyPaths = new List<EnemyPath>();
-    public Transform waypointParent; // optional parent for markers in hierarchy
+    public Transform waypointParent; 
 
     void Start()
     {
