@@ -29,13 +29,13 @@ public class WaveSpawner : MonoBehaviour
 
     void Start()
     {
-        gameLoop = FindFirstObjectByType<GameLoop>();
-        coreTower = gameLoop.coreTower;
+       // gameLoop = FindFirstObjectByType<GameLoop>();
+        //coreTower = gameLoop.coreTower;
 
         // If you ever add multiple waypoint parents, adjust this
-        laneThreatRatings = new float[1] { 1f };
+        //laneThreatRatings = new float[1] { 1f };
 
-        StartCoroutine(WaveManager());
+       // StartCoroutine(WaveManager());
     }
 
     IEnumerator WaveManager()
