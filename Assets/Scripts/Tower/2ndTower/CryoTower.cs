@@ -4,14 +4,17 @@ using System.Collections;
 public class CryoTower : TowerBehaviour
 {
     [Header("Cryo Settings")]
-    public float SlowFactor = 0.5f;     // 50% of enemy speed
-    public float SlowDuration = 2f;     // how long the slow lasts
+    public float SlowFactor = 0.5f;
+    public float SlowDuration = 2f;
 
     void Update()
     {
         if (Target == null || Target.Health <= 0 || !Target.gameObject.activeSelf || Vector3.Distance(transform.position, Target.transform.position) > Range)
         {
             Target = TowerTargetting.GetTarget(this, TowerTargetting.TargetType.First);
+            if (Target != null && Target.enemyType == EnemyMovement.EnemyType.Healer)
+                Target = null;
+
             if (Target == null)
             {
                 if (lineRenderer != null) lineRenderer.enabled = false;
@@ -39,9 +42,11 @@ public class CryoTower : TowerBehaviour
 
     IEnumerator ApplyCryoEffect(EnemyMovement enemy)
     {
+        if (enemy == null || enemy.enemyType == EnemyMovement.EnemyType.Healer) yield break;
+
         float originalSpeed = enemy.Speed;
         enemy.Speed *= SlowFactor;
-        enemy.TakeDamage(Damage); // still deals light damage
+        enemy.TakeDamage(Damage);
 
         yield return new WaitForSeconds(SlowDuration);
 
@@ -60,3 +65,4 @@ public class CryoTower : TowerBehaviour
         lineRenderer.enabled = false;
     }
 }
+

@@ -222,11 +222,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bae9c0b3628ec4f4ea0222225b427c68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Range: 70
+  Range: 15
   EnemiesLayer:
     serializedVersion: 2
     m_Bits: 64
-  Target: {fileID: 3770443359722776411, guid: 4b05874e4fc31a346a496a79e797f430, type: 3}
+  Target: {fileID: 0}
   TowerPivot: {fileID: 8997946685648409849}
   Damage: 10
   FireRate: 1

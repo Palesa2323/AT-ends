@@ -11,6 +11,9 @@ public class BombTower : TowerBehaviour
         if (Target == null || Target.Health <= 0 || !Target.gameObject.activeSelf || Vector3.Distance(transform.position, Target.transform.position) > Range)
         {
             Target = TowerTargetting.GetTarget(this, TowerTargetting.TargetType.First);
+            if (Target != null && Target.enemyType == EnemyMovement.EnemyType.Healer)
+                Target = null;
+
             if (Target == null)
             {
                 if (lineRenderer != null) lineRenderer.enabled = false;
@@ -35,7 +38,6 @@ public class BombTower : TowerBehaviour
 
     IEnumerator FireBomb(Vector3 impactPoint)
     {
-        // optional explosion visual placeholder
         if (lineRenderer != null)
         {
             lineRenderer.enabled = true;
@@ -47,13 +49,13 @@ public class BombTower : TowerBehaviour
             lineRenderer.enabled = false;
         }
 
-        yield return new WaitForSeconds(0.2f); // simulate projectile travel time
+        yield return new WaitForSeconds(0.2f);
 
         Collider[] hitEnemies = Physics.OverlapSphere(impactPoint, ExplosionRadius, EnemiesLayer);
         foreach (Collider hit in hitEnemies)
         {
             EnemyMovement e = hit.GetComponent<EnemyMovement>();
-            if (e != null)
+            if (e != null && e.enemyType != EnemyMovement.EnemyType.Healer)
                 e.TakeDamage(Damage);
         }
     }

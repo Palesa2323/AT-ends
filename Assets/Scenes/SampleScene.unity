@@ -1598,7 +1598,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Resources : '
+  m_text: 'Resources : 100'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
   m_sharedMaterial: {fileID: 2147374, guid: 0161d805a3764c089bef00bfe00793f5, type: 2}
@@ -1842,32 +1842,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f77d6462766f6e645bb5738a1163b231, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  countdown: 0
-  spawnPoint: {fileID: 0}
-  waves:
-  - enemies:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    timeToNextEnemy: 0
-    timeToNextWave: 0
-    enemiesLeft: 0
-  - enemies:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    timeToNextEnemy: 0
-    timeToNextWave: 0
-    enemiesLeft: 0
-  - enemies:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
-    timeToNextEnemy: 0
-    timeToNextWave: 0
-    enemiesLeft: 0
+  BaseDR_Multiplier: 1.2
+  TimeBetweenWaves: 10
+  MinSpawnInterval: 0.4
+  MaxSpawnInterval: 1
+  NormalCost: 1
+  RunnerCost: 1.5
+  HealerCost: 2.5
+  MaxWaves: 6
 --- !u!4 &1344404201
 Transform:
   m_ObjectHideFlags: 0
@@ -2058,13 +2040,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NodeParent: {fileID: 693677792}
-  resourceText: {fileID: 1132500179}
   gameOverPanel: {fileID: 1925931647}
   winPanel: {fileID: 116660849}
   coreTower: {fileID: 1898163294}
-  CurrentWave: 0
-  BaseDR_Multiplier: 1.2
-  SpawnLocations: []
+  waveSpawner: {fileID: 1344404200}
+  resourceText: {fileID: 1132500179}
 --- !u!4 &1530542848
 Transform:
   m_ObjectHideFlags: 0
@@ -2889,6 +2869,14 @@ PrefabInstance:
     - target: {fileID: 3342628114031605700, guid: 4b05874e4fc31a346a496a79e797f430, type: 3}
       propertyPath: m_Name
       value: Basic
+      objectReference: {fileID: 0}
+    - target: {fileID: 3770443359722776411, guid: 4b05874e4fc31a346a496a79e797f430, type: 3}
+      propertyPath: HealAmount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3770443359722776411, guid: 4b05874e4fc31a346a496a79e797f430, type: 3}
+      propertyPath: HealRadius
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4271570339268466677, guid: 4b05874e4fc31a346a496a79e797f430, type: 3}
       propertyPath: m_LocalPosition.x

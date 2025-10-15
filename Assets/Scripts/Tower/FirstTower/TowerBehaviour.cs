@@ -1,10 +1,8 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
-
 
 public class TowerBehaviour : MonoBehaviour
 {
-
     public float Range;
     public LayerMask EnemiesLayer;
 
@@ -31,8 +29,12 @@ public class TowerBehaviour : MonoBehaviour
     {
         if (Target == null || Target.Health <= 0 || !Target.gameObject.activeSelf || Vector3.Distance(transform.position, Target.transform.position) > Range)
         {
-            // Now correctly calling the GetTarget overload for TowerBehaviour
-            Target = TowerTargetting.GetTarget(this, TowerTargetting.TargetType.First);
+            Target = TowerTargetting.GetTarget(this, TowerTargetting.TargetType.First);
+
+            // âœ… Skip healers entirely
+            if (Target != null && Target.enemyType == EnemyMovement.EnemyType.Healer)
+                Target = null;
+
             if (Target == null)
             {
                 if (lineRenderer != null) lineRenderer.enabled = false;
@@ -68,4 +70,4 @@ public class TowerBehaviour : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         lineRenderer.enabled = false;
     }
-}  
+}
