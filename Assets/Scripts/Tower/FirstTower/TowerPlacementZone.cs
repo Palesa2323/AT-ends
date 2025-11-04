@@ -43,72 +43,46 @@ public class TowerPlacementZone : MonoBehaviour
         Ray ray = PlayerCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitInfo;
 
-        // Only continue if we hit something valid (terrain)
         if (Physics.Raycast(ray, out hitInfo, Mathf.Infinity, placementCollideMask))
         {
-            Vector3 placePosition = hitInfo.point;
-
-            // Adjust height to sit nicely above terrain
+            Vector3 placePosition = hitInfo.point;  // The point where the ray hits
             if (meshGen != null)
             {
+                // Adjust height based on terrain mesh
                 float terrainHeight = meshGen.GetHeightAtPosition(placePosition.x, placePosition.z);
-                placePosition.y = terrainHeight + 0.5f;
+                placePosition.y = terrainHeight + 0.5f;  // Adjust so it sits slightly above the terrain
             }
 
+            // Update the position of the tower preview
             currentPlacingTower.transform.position = placePosition;
 
-            // Find tower collider for placement validation
+            // Your existing collider check for blocking
             BoxCollider towerCollider = currentPlacingTower.GetComponentInChildren<BoxCollider>();
-            if (towerCollider == null)
+            if (towerCollider != null)
             {
-                Debug.LogWarning("Tower prefab missing BoxCollider! Please add one.");
-                return;
-            }
+                Vector3 boxCenter = currentPlacingTower.transform.position + towerCollider.center;
+                Vector3 halfExtents = towerCollider.size / 2;
 
-            Vector3 boxCenter = currentPlacingTower.transform.position + towerCollider.center;
-            Vector3 halfExtents = towerCollider.size / 2;
+                bool blocked = Physics.CheckBox(boxCenter, halfExtents, Quaternion.identity, placementCheckMask, QueryTriggerInteraction.Ignore);
 
-            // Check if placement area overlaps another tower
-            bool blocked = Physics.CheckBox(
-                boxCenter,
-                halfExtents,
-                Quaternion.identity,
-                placementCheckMask,
-                QueryTriggerInteraction.Ignore
-            );
-
-            // Show feedback color
-            if (towerMaterial != null)
-                towerMaterial.color = blocked ? Color.red : Color.green;
-
-            // --- LEFT CLICK: Place tower if valid ---
-            if (!blocked && Input.GetMouseButtonDown(0))
-            {
-                gameLoop.DeductCost(currentTowerCost);
+                // If blocked, show the red color feedback
                 if (towerMaterial != null)
-                    towerMaterial.color = Color.white;
+                    towerMaterial.color = blocked ? Color.red : Color.green;
 
-                // Finalize placement
-                currentPlacingTower.layer = LayerMask.NameToLayer("Tower");
-                Debug.Log($"Placed tower: {currentPlacingTower.name} at {currentPlacingTower.transform.position}");
-
-                currentPlacingTower = null; // stop following mouse
-                towerMaterial = null;
-                return;
-            }
-
-            // --- RIGHT CLICK: Cancel placement ---
-            if (Input.GetMouseButtonDown(1))
-            {
-                Debug.Log("Cancelled tower placement.");
-                CancelPlacement();
+                // Place tower if valid (not blocked)
+                if (!blocked && Input.GetMouseButtonDown(0))
+                {
+                    gameLoop.DeductCost(currentTowerCost);
+                    currentPlacingTower.layer = LayerMask.NameToLayer("Tower");
+                    currentPlacingTower = null;  // Stop following mouse
+                    towerMaterial = null;
+                }
             }
         }
         else
         {
-            // If ray misses terrain, make preview red
             if (towerMaterial != null)
-                towerMaterial.color = Color.red;
+                towerMaterial.color = Color.red;  // If raycast doesn't hit terrain, show red feedback
         }
     }
 

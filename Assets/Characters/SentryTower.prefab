@@ -186,6 +186,7 @@ GameObject:
   - component: {fileID: 5805620695258881455}
   - component: {fileID: 8980034859585455761}
   - component: {fileID: 3202037820705093043}
+  - component: {fileID: -4865788834706710013}
   m_Layer: 3
   m_Name: SentryTower
   m_TagString: Cant Place
@@ -233,6 +234,9 @@ MonoBehaviour:
   delay: 0
   fireTimer: 0
   lineRenderer: {fileID: 8111427267234060306}
+  towerLevel: 1
+  maxTowerLevel: 3
+  upgradeCost: 100
 --- !u!120 &8111427267234060306
 LineRenderer:
   serializedVersion: 2
@@ -401,3 +405,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHealth: 40
+--- !u!114 &-4865788834706710013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8538766398830281285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c38d127e894434788e4f1549826dbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgradeLevel2Prefab: {fileID: 832793629603051503, guid: c1a9656249e034340994e7b337654029, type: 3}
+  upgradeLevel3Prefab: {fileID: 556505444573869959, guid: 060fd548f9553864d9ffa9a3c2540bbf, type: 3}
+  upgrade1Cost: 75
+  upgrade2Cost: 150

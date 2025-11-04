@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: -4412345580541177940}
   - component: {fileID: 1470171819268240909}
   - component: {fileID: -8133035505682185034}
+  - component: {fileID: 381849146354220261}
   m_Layer: 3
   m_Name: CryoTower
   m_TagString: Untagged
@@ -61,6 +62,9 @@ MonoBehaviour:
   delay: 0
   fireTimer: 0
   lineRenderer: {fileID: 5712593946627860648}
+  towerLevel: 1
+  maxTowerLevel: 3
+  upgradeCost: 100
   SlowFactor: 0.5
   SlowDuration: 2
 --- !u!120 &5712593946627860648
@@ -231,6 +235,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHealth: 40
+--- !u!114 &381849146354220261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1434642995764860507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c38d127e894434788e4f1549826dbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgradeLevel2Prefab: {fileID: 9060556663521086837, guid: e81faa86c8c269b4282cb5b84d630f27, type: 3}
+  upgradeLevel3Prefab: {fileID: 5485870391144948937, guid: 60b6db19e5b79664a85c575447ec6700, type: 3}
+  upgrade1Cost: 75
+  upgrade2Cost: 150
 --- !u!1 &4654603938000870424
 GameObject:
   m_ObjectHideFlags: 0

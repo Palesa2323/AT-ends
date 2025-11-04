@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4580618764408232373}
   - component: {fileID: 8085262593795342323}
   - component: {fileID: 2536847008525977203}
+  - component: {fileID: -3043176552972534518}
   m_Layer: 3
   m_Name: BombTower
   m_TagString: Untagged
@@ -60,6 +61,9 @@ MonoBehaviour:
   delay: 0
   fireTimer: 0
   lineRenderer: {fileID: 6898886642836583391}
+  towerLevel: 1
+  maxTowerLevel: 3
+  upgradeCost: 100
   ProjectilePrefab: {fileID: 337113668907084733, guid: d949ba519ca7bf14484e796b95565683, type: 3}
   ExplosionPrefab: {fileID: 4000667520668516784, guid: d0ec0a14054713c4cb454dc5f34fabb2, type: 3}
   ExplosionRadius: 3
@@ -231,6 +235,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MaxHealth: 40
+--- !u!114 &-3043176552972534518
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400369174487786161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c38d127e894434788e4f1549826dbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgradeLevel2Prefab: {fileID: 69764914875369998, guid: 20e1359af3ced7144bfc0b33c9ed4e16, type: 3}
+  upgradeLevel3Prefab: {fileID: 5633045041175435027, guid: 0d1af56487b7694449929f863bef42c1, type: 3}
+  upgrade1Cost: 75
+  upgrade2Cost: 150
 --- !u!1001 &2295956983499501624
 PrefabInstance:
   m_ObjectHideFlags: 0

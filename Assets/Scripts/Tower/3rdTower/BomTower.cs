@@ -6,8 +6,8 @@ public class BombTower : TowerBehaviour
     // Inherits Damage, FireRate, Range, Target, fireTimer, etc., from TowerBehaviour
 
     [Header("Bomb Settings")]
-    public GameObject ProjectilePrefab; // Must be linked in Inspector
-    public GameObject ExplosionPrefab;  // Must be linked in Inspector
+    public GameObject ProjectilePrefab; 
+    public GameObject ExplosionPrefab;  
     public float ExplosionRadius = 3f;
 
     // Use a custom update to handle the projectile launch
