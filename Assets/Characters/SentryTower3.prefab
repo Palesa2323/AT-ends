@@ -52,6 +52,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: SentryTower3
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d8ed25b079b2db445abbc94d818bcb1e, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8164078558771037576, guid: d8ed25b079b2db445abbc94d818bcb1e, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -75,6 +83,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: -818350073931804555}
   m_SourcePrefab: {fileID: 100100000, guid: d8ed25b079b2db445abbc94d818bcb1e, type: 3}
+--- !u!4 &325101806954224741 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1151388028547126963, guid: d8ed25b079b2db445abbc94d818bcb1e, type: 3}
+  m_PrefabInstance: {fileID: 826537049537923798}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &556505444573869959 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: d8ed25b079b2db445abbc94d818bcb1e, type: 3}
@@ -141,17 +154,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   towerType: 0
-  Range: 0
+  Range: 15
   EnemiesLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   Target: {fileID: 0}
-  TowerPivot: {fileID: 0}
-  Damage: 0
-  FireRate: 0
+  TowerPivot: {fileID: 325101806954224741}
+  Damage: 30
+  FireRate: 3
   delay: 0
   fireTimer: 0
-  lineRenderer: {fileID: 0}
+  lineRenderer: {fileID: -7628633225008606500}
+  upgradeData: {fileID: 11400000, guid: 4babf5ccd04c02f438d171bc76152f07, type: 2}
 --- !u!120 &-7628633225008606500
 LineRenderer:
   serializedVersion: 2
@@ -284,9 +298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57c38d127e894434788e4f1549826dbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalTowerLevel: 0
-  bombTowerLevel: 0
-  cryoTowerLevel: 0
+  upgradeData: {fileID: 0}
   normalUpgradeCost: 100
   bombUpgradeCost: 200
-  cryoUpgradeCost: 300
+  cryptoUpgradeCost: 200

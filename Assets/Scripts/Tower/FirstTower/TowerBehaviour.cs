@@ -18,8 +18,10 @@ public class TowerBehaviour : MonoBehaviour
 
 
     public LineRenderer lineRenderer;
+    public TowerUpgradeData upgradeData; 
 
-    // Internal level tracking (auto-applied by TowerManager)
+
+   
     private int appliedUpgradeLevel = 0;
 
     private void Start()
@@ -114,5 +116,6 @@ public class TowerBehaviour : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         lineRenderer.enabled = false;
     }
+
 }
 

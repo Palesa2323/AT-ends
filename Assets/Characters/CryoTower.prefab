@@ -62,6 +62,7 @@ MonoBehaviour:
   delay: 0
   fireTimer: 0
   lineRenderer: {fileID: 5712593946627860648}
+  upgradeData: {fileID: 11400000, guid: f6be75b39f2ba9f4f8bb0f199a6a0be4, type: 2}
   SlowFactor: 0.5
   SlowDuration: 2
 --- !u!120 &5712593946627860648
@@ -244,12 +245,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57c38d127e894434788e4f1549826dbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalTowerLevel: 0
-  bombTowerLevel: 0
-  cryoTowerLevel: 0
+  upgradeData: {fileID: 11400000, guid: f6be75b39f2ba9f4f8bb0f199a6a0be4, type: 2}
   normalUpgradeCost: 100
   bombUpgradeCost: 200
-  cryoUpgradeCost: 300
+  cryptoUpgradeCost: 200
 --- !u!1001 &6912093668130518068
 PrefabInstance:
   m_ObjectHideFlags: 0

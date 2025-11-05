@@ -148,20 +148,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42b62a807b808d64d858591adc0feda5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerType: 0
-  Range: 0
+  towerType: 2
+  Range: 10
   EnemiesLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   Target: {fileID: 0}
-  TowerPivot: {fileID: 0}
-  Damage: 0
-  FireRate: 0
+  TowerPivot: {fileID: 5699972250962906923}
+  Damage: 20
+  FireRate: 3
   delay: 0
-  fireTimer: 0
-  lineRenderer: {fileID: 0}
-  SlowFactor: 0.5
-  SlowDuration: 2
+  fireTimer: -0.03
+  lineRenderer: {fileID: -6107590815226366927}
+  upgradeData: {fileID: 11400000, guid: f6be75b39f2ba9f4f8bb0f199a6a0be4, type: 2}
+  SlowFactor: 3
+  SlowDuration: 5
 --- !u!120 &-6107590815226366927
 LineRenderer:
   serializedVersion: 2
@@ -294,9 +295,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57c38d127e894434788e4f1549826dbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalTowerLevel: 0
-  bombTowerLevel: 0
-  cryoTowerLevel: 0
+  upgradeData: {fileID: 0}
   normalUpgradeCost: 100
   bombUpgradeCost: 200
-  cryoUpgradeCost: 300
+  cryptoUpgradeCost: 200
+--- !u!4 &5699972250962906923 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1151388028547126963, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+  m_PrefabInstance: {fileID: 4674969371297847704}
+  m_PrefabAsset: {fileID: 0}
