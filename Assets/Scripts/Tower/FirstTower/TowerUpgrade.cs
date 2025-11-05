@@ -1,55 +1,117 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerUpgrade : MonoBehaviour
+public enum TowerType { Normal, Bomb, Cryo }
+
+public class TowerManager : MonoBehaviour
 {
-    [Header("Upgrade Settings")]
-    public GameObject upgradeLevel2Prefab;
-    public GameObject upgradeLevel3Prefab;
+    public static TowerManager Instance;
 
-    public int upgrade1Cost = 75;
-    public int upgrade2Cost = 150;
+    [Header("Upgrade Levels (global per tower type)")]
+    public int normalTowerLevel = 0;
+    public int bombTowerLevel = 0;
+    public int cryoTowerLevel = 0;
 
-    private int currentLevel = 1;
-    private GameLoop gameLoop;
+    [Header("Upgrade Costs")]
+    public int normalUpgradeCost = 100;
+    public int bombUpgradeCost = 200;
+    public int cryoUpgradeCost = 300;
 
-    void Start()
+    // registered towers currently in scene
+    private readonly List<TowerBehaviour> allTowers = new List<TowerBehaviour>();
+
+    private void Awake()
     {
-        gameLoop = FindFirstObjectByType<GameLoop>();
+        if (Instance == null) Instance = this;
+        else Destroy(gameObject);
     }
 
-    public void TryUpgrade()
+    // safe register/unregister
+    public void RegisterTower(TowerBehaviour tower)
     {
-        if (currentLevel == 1 && upgradeLevel2Prefab != null)
+        if (tower == null) return;
+        if (!allTowers.Contains(tower)) allTowers.Add(tower);
+    }
+
+    public void UnregisterTower(TowerBehaviour tower)
+    {
+        if (tower == null) return;
+        if (allTowers.Contains(tower)) allTowers.Remove(tower);
+    }
+
+    // Public method called by the UI
+    public bool TryUpgradeTowerType(TowerType type)
+    {
+        int cost = GetCost(type);
+        if (GameManager.Instance == null)
         {
-            AttemptUpgrade(upgrade1Cost, upgradeLevel2Prefab);
+            Debug.LogWarning("GameManager.Instance is null — cannot check money. Upgrade aborted.");
+            return false;
         }
-        else if (currentLevel == 2 && upgradeLevel3Prefab != null)
+
+        if (GameManager.Instance.money < cost)
         {
-            AttemptUpgrade(upgrade2Cost, upgradeLevel3Prefab);
+            Debug.Log("Not enough money to upgrade " + type);
+            return false;
         }
-        else
+
+        // Deduct cost
+        GameManager.Instance.money -= cost;
+
+        // Increase level
+        IncrementLevel(type);
+
+        // Apply effects to all towers of this type
+        ApplyUpgradesToAll(type);
+
+        Debug.Log($"{type} towers upgraded. New level: {GetLevel(type)}");
+        return true;
+    }
+
+    int GetCost(TowerType type)
+    {
+        switch (type)
         {
-            Debug.Log("Tower already maxed out or missing upgrade prefab!");
+            case TowerType.Normal: return normalUpgradeCost;
+            case TowerType.Bomb: return bombUpgradeCost;
+            case TowerType.Cryo: return cryoUpgradeCost;
+            default: return 9999;
         }
     }
 
-    private void AttemptUpgrade(int cost, GameObject nextPrefab)
+    void IncrementLevel(TowerType type)
     {
-        if (GameLoop.Resources < cost)
+        switch (type)
         {
-            Debug.Log("Not enough resources to upgrade!");
-            return;
+            case TowerType.Normal: normalTowerLevel++; break;
+            case TowerType.Bomb: bombTowerLevel++; break;
+            case TowerType.Cryo: cryoTowerLevel++; break;
         }
-
-        gameLoop.DeductCost(cost);
-        Vector3 pos = transform.position;
-        Quaternion rot = transform.rotation;
-
-        // Destroy old tower
-        Destroy(gameObject);
-
-        // Spawn upgraded tower
-        GameObject newTower = Instantiate(nextPrefab, pos, rot);
-        Debug.Log($"Tower upgraded to {newTower.name}!");
     }
+
+    int GetLevel(TowerType type)
+    {
+        switch (type)
+        {
+            case TowerType.Normal: return normalTowerLevel;
+            case TowerType.Bomb: return bombTowerLevel;
+            case TowerType.Cryo: return cryoTowerLevel;
+            default: return 0;
+        }
+    }
+
+    void ApplyUpgradesToAll(TowerType type)
+    {
+        foreach (var t in allTowers)
+        {
+            if (t.towerType == type)
+            {
+                t.ApplyUpgradeStats(); // TowerBehaviour will read TowerManager.Instance levels and update itself
+            }
+        }
+    }
+
+    // Helper for UI: expose cost & level
+    public int GetUpgradeCost(TowerType type) => GetCost(type);
+    public int GetUpgradeLevel(TowerType type) => GetLevel(type);
 }
