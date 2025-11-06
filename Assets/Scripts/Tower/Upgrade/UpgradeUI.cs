@@ -1,23 +1,38 @@
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 public class UpgradeUIManager : MonoBehaviour
 {
+    [Header("UI References")]
     public GameObject upgradePanel;
 
-    public void OpenUpgradeMenu()
+    private void Start()
     {
+        if (upgradePanel != null)
+            upgradePanel.SetActive(false); // make sure it starts hidden
+    }
+
+    public void OpenUpgradePanel()
+    {
+        if (upgradePanel == null)
+        {
+            Debug.LogError("⚠️ UpgradePanel not assigned in the Inspector!");
+            return;
+        }
+
         upgradePanel.SetActive(true);
-        Time.timeScale = 0f; // pause game
+        Debug.Log("✅ Upgrade panel opened!");
     }
 
-    public void CloseUpgradeMenu()
+    public void CloseUpgradePanel()
     {
-        upgradePanel.SetActive(false);
-        Time.timeScale = 1f; // resume
-    }
+        if (upgradePanel == null)
+        {
+            Debug.LogError("⚠️ UpgradePanel not assigned in the Inspector!");
+            return;
+        }
 
-    public void UpgradeNormal() => TowerManager.Instance.TryUpgradeTowerType(TowerType.Normal);
-    public void UpgradeBomb() => TowerManager.Instance.TryUpgradeTowerType(TowerType.Bomb);
-    public void UpgradeCrypto() => TowerManager.Instance.TryUpgradeTowerType(TowerType.Crypto);
+        upgradePanel.SetActive(false);
+        Debug.Log("❌ Upgrade panel closed!");
+    }
 }
+
