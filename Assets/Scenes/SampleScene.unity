@@ -1856,6 +1856,7 @@ MonoBehaviour:
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
   meshFilter: {fileID: 663992234}
+  terrainMaterial: {fileID: 2100000, guid: 639f21529b3004743969e4483eb1bfee, type: 2}
   pathColor: {r: 0.7830189, g: 0.42225304, b: 0.09972411, a: 1}
   pathWidth: 2
   enemyPaths:

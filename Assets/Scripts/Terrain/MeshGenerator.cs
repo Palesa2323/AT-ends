@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(MeshFilter))]
+[RequireComponent(typeof(MeshRenderer))]
+[RequireComponent(typeof(MeshCollider))]
 public class MeshGenerator : MonoBehaviour
 {
     Mesh mesh;
@@ -10,76 +12,79 @@ public class MeshGenerator : MonoBehaviour
     int[] triangles;
     Color[] colors;
 
-    public int xSize = 200; // Change this from 20 to a larger number
-    public int zSize = 100; // Change this from 20 to a larger number
+    public int xSize = 200;
+    public int zSize = 100;
     public Gradient gradient;
     public MeshFilter meshFilter;
     private MeshCollider meshCollider;
+    private MeshRenderer meshRenderer;
 
-  
-    public Color pathColor = Color.grey; 
-    public float pathWidth = 2f; 
+    public Material terrainMaterial; // Assign your shader material here
 
+    public Color pathColor = Color.grey;
+    public float pathWidth = 2f;
 
     float minTerrainHeight;
     float maxTerrainHeight;
 
-    // Random offsets
     float xOffset;
     float zOffset;
 
     // Enemy path stuff
     public List<EnemyPath> enemyPaths = new List<EnemyPath>();
-    public Transform waypointParent; 
+    public Transform waypointParent;
 
     void Start()
     {
+        // Create Mesh and assign to MeshFilter
         mesh = new Mesh();
-        GetComponent<MeshFilter>().mesh = mesh;
+        meshFilter = GetComponent<MeshFilter>();
+        meshFilter.mesh = mesh;
 
-        // Get the existing MeshCollider component
+        // Assign MeshRenderer and shader material
+        meshRenderer = GetComponent<MeshRenderer>();
+        if (meshRenderer == null)
+            meshRenderer = gameObject.AddComponent<MeshRenderer>();
+
+        if (terrainMaterial != null)
+            meshRenderer.material = terrainMaterial;
+
+        // Assign MeshCollider
         meshCollider = GetComponent<MeshCollider>();
         if (meshCollider == null)
-        {
-            Debug.LogError("MeshCollider not found on the GameObject!");
-            return;
-        }
+            meshCollider = gameObject.AddComponent<MeshCollider>();
 
-        // Generate random offsets every new game
+        // Random offsets for terrain noise
         xOffset = Random.Range(0f, 9999f);
         zOffset = Random.Range(0f, 9999f);
 
-        // Randomize path color for each new game
+        // Random path color
         pathColor = Random.ColorHSV(0f, 1f, 0.5f, 1f, 0.5f, 1f);
 
+        // Generate terrain
         CreateShape();
         UpdateMesh();
-        // Check terrain height
+
         Debug.Log("Terrain min height: " + minTerrainHeight);
         Debug.Log("Terrain max height: " + maxTerrainHeight);
-
-}
+    }
 
     void CreateShape()
     {
         vertices = new Vector3[(xSize + 1) * (zSize + 1)];
         int i = 0;
 
-        // Initialize min/max heights
         minTerrainHeight = float.MaxValue;
         maxTerrainHeight = float.MinValue;
 
-        // Define paths: three start points to center
         Vector2 center = new Vector2(xSize / 2f, zSize / 2f);
         Vector2[] pathStarts = new Vector2[3]
         {
-        new Vector2(0, 0),          // top-left
-        new Vector2(xSize, 0),      // top-right
-        new Vector2(xSize/2f, zSize) // bottom-center
+            new Vector2(0, 0),
+            new Vector2(xSize, 0),
+            new Vector2(xSize/2f, zSize)
         };
-        float pathWidth = 5f;
 
-        // Generate vertices
         for (int z = 0; z <= zSize; z++)
         {
             for (int x = 0; x <= xSize; x++)
@@ -87,7 +92,6 @@ public class MeshGenerator : MonoBehaviour
                 float y = Mathf.PerlinNoise((x * .3f) + xOffset, (z * .3f) + zOffset) * 2f;
                 Vector3 vertex = new Vector3(x, y, z);
 
-                // Flatten vertex if it’s near any path
                 Vector2 vert2D = new Vector2(x, z);
                 foreach (Vector2 start in pathStarts)
                 {
@@ -99,7 +103,6 @@ public class MeshGenerator : MonoBehaviour
 
                 vertices[i] = vertex;
 
-                // Track min and max terrain height
                 if (vertex.y > maxTerrainHeight) maxTerrainHeight = vertex.y;
                 if (vertex.y < minTerrainHeight) minTerrainHeight = vertex.y;
 
@@ -107,7 +110,7 @@ public class MeshGenerator : MonoBehaviour
             }
         }
 
-        // Generate triangles (same as before)
+        // Triangles
         triangles = new int[xSize * zSize * 6];
         int vert = 0;
         int tria = 0;
@@ -128,54 +131,43 @@ public class MeshGenerator : MonoBehaviour
             vert++;
         }
 
-        /// Generate colors (gradient for terrain, special color for paths)
+        // Colors
         colors = new Color[vertices.Length];
-        i = 0;
-        for (int z = 0; z <= zSize; z++)
+        for (i = 0; i < vertices.Length; i++)
         {
-            for (int x = 0; x <= xSize; x++)
+            Vector3 currentVertex = vertices[i];
+            bool isPathVertex = false;
+
+            foreach (EnemyPath path in enemyPaths)
             {
-                Vector3 currentVertex = vertices[i]; // Get the vertex we're coloring
-                bool isPathVertex = false;
-
-                // Check if this vertex is part of any generated path
-                foreach (EnemyPath path in enemyPaths)
+                for (int j = 0; j < path.waypoints.Count - 1; j++)
                 {
-                    for (int j = 0; j < path.waypoints.Count - 1; j++)
+                    Vector2 start = new Vector2(path.waypoints[j].x, path.waypoints[j].z);
+                    Vector2 end = new Vector2(path.waypoints[j + 1].x, path.waypoints[j + 1].z);
+                    Vector2 vert2D = new Vector2(currentVertex.x, currentVertex.z);
+
+                    if (IsPointNearLine(start, end, vert2D, pathWidth))
                     {
-                        Vector2 start = new Vector2(path.waypoints[j].x, path.waypoints[j].z);
-                        Vector2 end = new Vector2(path.waypoints[j + 1].x, path.waypoints[j + 1].z);
-                        Vector2 vert2D = new Vector2(currentVertex.x, currentVertex.z);
-
-                        if (IsPointNearLine(start, end, vert2D, pathWidth))
-                        {
-                            isPathVertex = true;
-                            // Also flatten the path here, 
-                            // currentVertex.y = 0.5f; // Or whatever flat height i want
-                            // vertices[i] = currentVertex; // Update the vertex in the array
-                            break; // Found a path, no need to check other segments/paths
-                        }
+                        isPathVertex = true;
+                        break;
                     }
-                    if (isPathVertex) break;
                 }
+                if (isPathVertex) break;
+            }
 
-                if (isPathVertex)
-                {
-                    colors[i] = pathColor; // Apply the path color
-                    // Ensure path vertices are flattened consistently
-                    currentVertex.y = 0.5f; // Set to a consistent flat height
-                    vertices[i] = currentVertex; // Update the vertex in the array
-                }
-                else
-                {
-                    // Apply original terrain gradient color
-                    float height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, currentVertex.y);
-                    colors[i] = gradient.Evaluate(height);
-                }
-                i++;
+            if (isPathVertex)
+            {
+                colors[i] = pathColor;
+                currentVertex.y = 0.5f;
+                vertices[i] = currentVertex;
+            }
+            else
+            {
+                float height = Mathf.InverseLerp(minTerrainHeight, maxTerrainHeight, currentVertex.y);
+                colors[i] = gradient.Evaluate(height);
             }
         }
-        // Create enemy paths
+
         GenerateWaypoints(pathStarts, center);
     }
 
@@ -197,12 +189,9 @@ public class MeshGenerator : MonoBehaviour
                 int z = Mathf.RoundToInt(point2D.y);
                 int index = Mathf.Clamp(z * (xSize + 1) + x, 0, vertices.Length - 1);
 
-                float y = vertices[index].y;
-
-                Vector3 waypoint = new Vector3(point2D.x, 0.5f + 0.5f, point2D.y);
+                Vector3 waypoint = new Vector3(point2D.x, 1f, point2D.y);
                 path.waypoints.Add(waypoint);
 
-                // Optional visible markers - these will now be above the colored path
                 if (waypointParent != null)
                 {
                     GameObject sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -211,20 +200,15 @@ public class MeshGenerator : MonoBehaviour
                     sphere.name = path.pathName + "_WP" + j;
                     sphere.transform.SetParent(waypointParent);
 
-                    // This is the new line you need to add
-                    // Get the MeshRenderer component and disable it
                     MeshRenderer renderer = sphere.GetComponent<MeshRenderer>();
                     if (renderer != null)
-                    {
                         renderer.enabled = false;
-                    }
                 }
             }
             enemyPaths.Add(path);
         }
     }
 
-    // Helper function for path proximity
     bool IsPointNearLine(Vector2 start, Vector2 end, Vector2 point, float width)
     {
         float dist = Vector2.Distance(PointOnLineClosest(start, end, point), point);
@@ -239,7 +223,8 @@ public class MeshGenerator : MonoBehaviour
         t = Mathf.Clamp01(t);
         return a + ab * t;
     }
-    private void UpdateMesh()
+
+    void UpdateMesh()
     {
         mesh.Clear();
         mesh.vertices = vertices;
@@ -247,13 +232,9 @@ public class MeshGenerator : MonoBehaviour
         mesh.colors = colors;
         mesh.RecalculateNormals();
 
-        // Add or update MeshCollider
-        MeshCollider meshCollider = GetComponent<MeshCollider>();
-        if (meshCollider == null)
-            meshCollider = gameObject.AddComponent<MeshCollider>();
-        meshCollider.sharedMesh = mesh;
+        if (meshCollider != null)
+            meshCollider.sharedMesh = mesh;
     }
-
 
     private void OnDrawGizmos()
     {
@@ -275,7 +256,6 @@ public class MeshGenerator : MonoBehaviour
 
     public float GetHeightAtPosition(float x, float z)
     {
-        // Convert world position to nearest vertex in the mesh
         int ix = Mathf.Clamp(Mathf.RoundToInt(x), 0, xSize);
         int iz = Mathf.Clamp(Mathf.RoundToInt(z), 0, zSize);
         int index = iz * (xSize + 1) + ix;
@@ -283,10 +263,10 @@ public class MeshGenerator : MonoBehaviour
         if (vertices != null && index >= 0 && index < vertices.Length)
             return vertices[index].y;
 
-        return 0f; // fallback
+        return 0f;
     }
-
 }
+
 [System.Serializable]
 public class EnemyPath
 {
