@@ -81,7 +81,6 @@ public class GameLoop : MonoBehaviour
         }
     }
 
-    // ------------------- Resource Handling -------------------
     public void AddResources(int amount)
     {
         Resources += amount;
@@ -110,7 +109,7 @@ public class GameLoop : MonoBehaviour
 
     }
 
-    // ------------------- Game State -------------------
+
     public void GameOver()
     {
         Time.timeScale = 0;
