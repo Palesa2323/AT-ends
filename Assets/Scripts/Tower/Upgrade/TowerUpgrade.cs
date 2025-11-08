@@ -60,19 +60,7 @@ public class TowerManager : MonoBehaviour
             _ => 0
         };
 
-        if (GameManager.Instance.money < cost)
-        {
-            Debug.Log("Not enough money!");
-            return;
-        }
-
-        GameManager.Instance.money -= cost;
-        towerLevels[type]++;
-
-        Debug.Log($"{type} towers upgraded to level {towerLevels[type]}!");
-
-        // replace all towers of this type with next-level prefab
-        UpgradeExistingTowers(type);
+       
     }
 
     private void UpgradeExistingTowers(TowerType type)
