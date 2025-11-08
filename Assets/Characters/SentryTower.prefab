@@ -255,6 +255,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8997946685648409849}
     m_Modifications:
+    - target: {fileID: 4725006465732387317, guid: 448cc3804c8e6a741a265ecd99e530c2, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4725006465732387317, guid: 448cc3804c8e6a741a265ecd99e530c2, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4725006465732387317, guid: 448cc3804c8e6a741a265ecd99e530c2, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 4803507669616445975, guid: 448cc3804c8e6a741a265ecd99e530c2, type: 3}
       propertyPath: m_Name
       value: SentryTower1

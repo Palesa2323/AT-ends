@@ -36,76 +36,76 @@ public class TowerPlacementZone : MonoBehaviour
 
     void Update()
     {
+        if (currentPlacingTower == null)
+            return; // Nothing to place
+
+        Ray ray = PlayerCamera.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hitInfo;
+
+        // Raycast ignoring layers for safety, can add layer mask later
+        bool hitTerrain = Physics.Raycast(ray, out hitInfo, Mathf.Infinity, placementCollideMask);
+
+        if (hitTerrain)
         {
-            // If we’re not placing a tower, don’t do anything
-            if (currentPlacingTower == null)
-                return;
+            Debug.Log("Raycast hit: " + hitInfo.collider.name + " at " + hitInfo.point);
 
-            Ray ray = PlayerCamera.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hitInfo;
-
-            // --- CRITICAL RAYCAST CHECK ---
-            bool hitTerrain = Physics.Raycast(ray, out hitInfo, Mathf.Infinity, placementCollideMask);
-
-            if (hitTerrain)
+            // Use procedural mesh height if meshGen exists, otherwise use hit point
+            Vector3 placePosition = hitInfo.point;
+            if (meshGen != null)
             {
-                Debug.Log("Raycast Hit Terrain. Tower should be placed at mouse cursor."); // ADDED LOG
-
-                Vector3 placePosition = hitInfo.point;
-
-                if (meshGen != null)
-                {
-                    float terrainHeight = meshGen.GetHeightAtPosition(placePosition.x, placePosition.z);
-                    placePosition.y = terrainHeight + 0.5f;
-                }
-
-                // --- TOWER POSITION UPDATE ---
-                currentPlacingTower.transform.position = placePosition;
-
-                
-                BoxCollider towerCollider = currentPlacingTower.GetComponentInChildren<BoxCollider>();
-                if (towerCollider != null)
-                {
-                    Vector3 boxCenter = currentPlacingTower.transform.position + towerCollider.center;
-                    Vector3 halfExtents = towerCollider.size / 2f;
-
-                    // Check for overlap using the correct layer mask
-                    bool blocked = Physics.CheckBox(boxCenter, halfExtents, Quaternion.identity, placementCheckMask, QueryTriggerInteraction.Ignore);
-
-                    if (towerMaterial != null)
-                        towerMaterial.color = blocked ? Color.red : Color.green;
-
-                    // --- PLACEMENT ---
-                    if (!blocked && Input.GetMouseButtonDown(0))
-                    {
-                        gameLoop.DeductCost(currentTowerCost);
-                        // Ensure the layer is correct upon final placement
-                        currentPlacingTower.layer = LayerMask.NameToLayer("Tower");
-                        currentPlacingTower = null;
-                        towerMaterial = null;
-                    }
-                }
+                float terrainHeight = meshGen.GetHeightAtPosition(placePosition.x, placePosition.z);
+                placePosition.y = terrainHeight + 0.5f;
             }
-            else 
+            else
             {
-                Debug.LogWarning("Raycast Missed Terrain. Tower moved to debug position."); // ADDED LOG
-
-                // --- DEBUG VISIBILITY FALLBACK ---
-                // Move the tower 5 units in front of the camera, regardless of terrain height.
-                if (currentPlacingTower != null)
-                {
-                    currentPlacingTower.transform.position = PlayerCamera.transform.position + PlayerCamera.transform.forward * 5f;
-                    if (towerMaterial != null)
-                        towerMaterial.color = Color.red;
-                }
+                placePosition.y += 0.5f;
             }
 
-            // Cancel logic: if the user right-clicks, cancel placement.
-            if (Input.GetMouseButtonDown(1))
+            currentPlacingTower.transform.position = placePosition;
+
+            // Check for placement collisions
+            BoxCollider towerCollider = currentPlacingTower.GetComponentInChildren<BoxCollider>();
+            bool blocked = false;
+            if (towerCollider != null)
             {
-                CancelPlacement();
+                Vector3 boxCenter = currentPlacingTower.transform.position + towerCollider.center;
+                Vector3 halfExtents = towerCollider.size / 2f;
+                blocked = Physics.CheckBox(boxCenter, halfExtents, Quaternion.identity, placementCheckMask, QueryTriggerInteraction.Ignore);
+
+                if (towerMaterial != null)
+                    towerMaterial.color = blocked ? Color.red : Color.green;
             }
 
+            // Place tower on left-click if valid
+            if (!blocked && Input.GetMouseButtonDown(0))
+            {
+                gameLoop.DeductCost(currentTowerCost);
+                currentPlacingTower.layer = LayerMask.NameToLayer("Tower"); // assign proper layer
+                currentPlacingTower = null; // stops following mouse
+                towerMaterial = null;
+            }
+        }
+        else
+        {
+            // Ray missed terrain: keep tower visible in front of camera for debugging
+            if (currentPlacingTower != null)
+            {
+                currentPlacingTower.transform.position = PlayerCamera.transform.position + PlayerCamera.transform.forward * 5f;
+                if (towerMaterial != null)
+                    towerMaterial.color = Color.red;
+            }
+
+            Debug.LogWarning("Raycast Missed Terrain. Tower moved to debug position.");
+        }
+
+        // Cancel placement on right-click
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (currentPlacingTower != null)
+                Destroy(currentPlacingTower);
+
+            currentPlacingTower = null;
+            towerMaterial = null;
         }
     }
 
