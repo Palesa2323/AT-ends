@@ -1714,7 +1714,7 @@ MonoBehaviour:
     m_Bits: 256
   placementCheckMask:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 4
   meshGen: {fileID: 663992236}
   normalTowerCost: 10
   cryoTowerCost: 30
