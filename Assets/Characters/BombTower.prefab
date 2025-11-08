@@ -63,7 +63,7 @@ MonoBehaviour:
   fireTimer: 0
   lineRenderer: {fileID: 6898886642836583391}
   upgradeData: {fileID: 11400000, guid: 4babf5ccd04c02f438d171bc76152f07, type: 2}
-  ProjectilePrefab: {fileID: 337113668907084733, guid: d949ba519ca7bf14484e796b95565683, type: 3}
+  ProjectilePrefab: {fileID: 2908787468587621604, guid: 9e8d520748bd8df40a6924f6e0d4e3d9, type: 3}
   ExplosionPrefab: {fileID: 4000667520668516784, guid: d0ec0a14054713c4cb454dc5f34fabb2, type: 3}
   ExplosionRadius: 3
 --- !u!120 &6898886642836583391
