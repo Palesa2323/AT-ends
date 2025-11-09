@@ -33,10 +33,25 @@ public class EnemyMovement : MonoBehaviour, ITakeDamage
     private ITakeDamage currentTargetDamageable;
     private Transform currentTargetTransform;
     public CoreTower CoreTower => coreTower;
-    // OR: public CoreTower coreTower;
 
     public void Init(List<Vector3> assignedPath, CoreTower tower)
     {
+        // --- 1. APPLY PROCEDURAL MUTATION FOR NORMAL (GOBLIN) ENEMIES ---
+        if (enemyType == EnemyType.Normal)
+        {
+            StatMutator.MutatedStats mutation = StatMutator.GenerateMutation();
+
+            // Apply mutated stats, overwriting inspector values
+            MaxHealth = mutation.Health;
+            Speed = mutation.Speed;
+            damageToCore = mutation.Damage;
+            // Round the reward to the nearest whole number
+            resourcesToAward = Mathf.RoundToInt(mutation.Reward);
+
+            // Apply visual cue (color change)
+            ApplyVisualMutation(mutation.VisualColor);
+        }
+
         Health = MaxHealth;
         waypoints = assignedPath;
         rb = GetComponent<Rigidbody>();
@@ -61,6 +76,19 @@ public class EnemyMovement : MonoBehaviour, ITakeDamage
         else
         {
             Debug.LogError("Assigned path is empty or null!");
+        }
+    }
+
+    void ApplyVisualMutation(Color newColor)
+    {
+        // Find the MeshRenderer on the current object or its children
+        MeshRenderer renderer = GetComponentInChildren<MeshRenderer>();
+        if (renderer != null)
+        {
+            // Create a new material instance so we don't change the prefab's base material
+            Material newMaterial = new Material(renderer.material);
+            newMaterial.color = newColor;
+            renderer.material = newMaterial;
         }
     }
 
@@ -102,12 +130,12 @@ public class EnemyMovement : MonoBehaviour, ITakeDamage
                 transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, 5f * Time.fixedDeltaTime);
             }
 
-            // NEW LOGIC: Healer vs. Attacker
+           
             if (enemyType == EnemyType.Healer)
             {
                 HealAllies();
             }
-            else // Normal and Runner attack targets
+            else 
             {
                 if (enemyAttack != null)
                 {
@@ -121,8 +149,6 @@ public class EnemyMovement : MonoBehaviour, ITakeDamage
             MoveAlongPath();
         }
     }
-
-   
     private void HealAllies()
     {
        

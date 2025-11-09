@@ -1,20 +1,10 @@
 using UnityEngine;
-
-/// <summary>
-/// StatMutator is a static utility class responsible for applying procedural
-/// randomization (mutation) to the Goblin's stats and appearance upon spawn.
-/// </summary>
 public static class StatMutator
 {
-    // --- Base Goblin Stats (Used as the 100% baseline) ---
     private const float BASE_HEALTH = 10f;
     private const float BASE_SPEED = 3.5f;
     private const float BASE_DAMAGE = 5f;
     private const float BASE_REWARD = 2f;
-
-    /// <summary>
-    /// Holds the results of the mutation, passed back to the Goblin.
-    /// </summary>
     public struct MutatedStats
     {
         public float Health;
@@ -24,19 +14,13 @@ public static class StatMutator
         public Color VisualColor;
     }
 
-    /// <summary>
-    /// Generates a randomized Stat profile and color for a new Goblin instance.
-    /// </summary>
     public static MutatedStats GenerateMutation()
     {
-        // 1. Determine the Mutation Tier
         float roll = Random.Range(0f, 1f);
         float multiplier; // This will define the min/max multiplier range
 
-        // Tier definitions:
         if (roll < 0.05f) // 5% chance
         {
-            // Tier 3 (Hazardous): Multiplier between 0.7 and 1.3 (±30%)
             multiplier = Random.Range(0.7f, 1.3f);
         }
         else if (roll < 0.30f) // 25% chance
