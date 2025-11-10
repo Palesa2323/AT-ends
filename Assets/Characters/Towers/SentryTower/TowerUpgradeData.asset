@@ -12,13 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8658510db81f0744d91612b53bc28b4d, type: 3}
   m_Name: TowerUpgradeData
   m_EditorClassIdentifier: 
-  towerSets:
-  - towerType: 2
-    levelPrefabs:
-    - {fileID: 1434642995764860507, guid: eca32bd6621ef26408c6a3ce4a0391c0, type: 3}
-  - towerType: 2
-    levelPrefabs:
-    - {fileID: 9060556663521086837, guid: e81faa86c8c269b4282cb5b84d630f27, type: 3}
-  - towerType: 2
-    levelPrefabs:
-    - {fileID: 5485870391144948937, guid: 60b6db19e5b79664a85c575447ec6700, type: 3}
+  towerSets: []

@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &4674969371297847704
+--- !u!1001 &880087606638131039
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -8,55 +8,55 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_LocalRotation.y
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: -8679921383154817045, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: 919132149155446097, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_Name
-      value: CrypoTower3
+      value: BombTower2
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: 919132149155446097, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 8164078558771037576, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - target: {fileID: 8164078558771037576, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
@@ -64,37 +64,88 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -7675498796564169528}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+      addedObject: {fileID: 3415718654875973245}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3461480358376315869}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+      addedObject: {fileID: -3174522368800809007}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3168985579758277374}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+      addedObject: {fileID: -8671062135075782719}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -6107590815226366927}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+      addedObject: {fileID: 612809143755436194}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: -7473658564045975747}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
+      addedObject: {fileID: 1128786711527578846}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 134591996707420387}
-  m_SourcePrefab: {fileID: 100100000, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
---- !u!1 &5485870391144948937 stripped
+      addedObject: {fileID: 3378090390404929935}
+  m_SourcePrefab: {fileID: 100100000, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
+--- !u!1 &69764914875369998 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
-  m_PrefabInstance: {fileID: 4674969371297847704}
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
+  m_PrefabInstance: {fileID: 880087606638131039}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &-7675498796564169528
+--- !u!65 &3415718654875973245
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69764914875369998}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.8864908, y: 3.0239692, z: 3.032626}
+  m_Center: {x: 2.1327586, y: 1.0119846, z: -0.14983809}
+--- !u!114 &-3174522368800809007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69764914875369998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 191abc17e3fda9f4dbf8d4a090246323, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  towerType: 1
+  Range: 10
+  EnemiesLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  Target: {fileID: 0}
+  TowerPivot: {fileID: 273662174119059948}
+  Damage: 30
+  FireRate: 4
+  delay: 0
+  fireTimer: 0
+  nextLevelPrefab: {fileID: 5633045041175435027, guid: 0d1af56487b7694449929f863bef42c1, type: 3}
+  upgradeCost: 100
+  lineRenderer: {fileID: 3378090390404929935}
+  upgradeData: {fileID: 0}
+  ProjectilePrefab: {fileID: 337113668907084733, guid: d949ba519ca7bf14484e796b95565683, type: 3}
+  ExplosionPrefab: {fileID: 2908787468587621604, guid: 9e8d520748bd8df40a6924f6e0d4e3d9, type: 3}
+  ExplosionRadius: 5
+--- !u!54 &-8671062135075782719
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5485870391144948937}
+  m_GameObject: {fileID: 69764914875369998}
   serializedVersion: 4
   m_Mass: 1
   m_Drag: 0
@@ -115,62 +166,44 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &3461480358376315869
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5485870391144948937}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.9071398, y: 3.0278451, z: 2.8347173}
-  m_Center: {x: 1.0259929, y: 1.0139226, z: -2.824498}
---- !u!114 &3168985579758277374
+--- !u!114 &612809143755436194
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5485870391144948937}
+  m_GameObject: {fileID: 69764914875369998}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 42b62a807b808d64d858591adc0feda5, type: 3}
+  m_Script: {fileID: 11500000, guid: 2314b7cd33fcf57458dc5a8290e39a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerType: 2
-  Range: 10
-  EnemiesLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  Target: {fileID: 0}
-  TowerPivot: {fileID: 5699972250962906923}
-  Damage: 20
-  FireRate: 3
-  delay: 0
-  fireTimer: -0.03
-  lineRenderer: {fileID: -6107590815226366927}
-  upgradeData: {fileID: 11400000, guid: f6be75b39f2ba9f4f8bb0f199a6a0be4, type: 2}
-  SlowFactor: 3
-  SlowDuration: 5
---- !u!120 &-6107590815226366927
+  MaxHealth: 40
+--- !u!114 &1128786711527578846
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69764914875369998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57c38d127e894434788e4f1549826dbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgradeData: {fileID: 0}
+  normalUpgradeCost: 100
+  bombUpgradeCost: 200
+  cryptoUpgradeCost: 200
+  playerResources: 500
+--- !u!120 &3378090390404929935
 LineRenderer:
   serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5485870391144948937}
+  m_GameObject: {fileID: 69764914875369998}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -270,37 +303,8 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
---- !u!114 &-7473658564045975747
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5485870391144948937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2314b7cd33fcf57458dc5a8290e39a1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  MaxHealth: 40
---- !u!114 &134591996707420387
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5485870391144948937}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57c38d127e894434788e4f1549826dbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  upgradeData: {fileID: 0}
-  normalUpgradeCost: 100
-  bombUpgradeCost: 200
-  cryptoUpgradeCost: 200
---- !u!4 &5699972250962906923 stripped
+--- !u!4 &273662174119059948 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 1151388028547126963, guid: 0237abb2618cfb24c998bffdc50f9a84, type: 3}
-  m_PrefabInstance: {fileID: 4674969371297847704}
+  m_CorrespondingSourceObject: {fileID: 1151388028547126963, guid: 30e84cf4f8e44a34798993f6f797ff9a, type: 3}
+  m_PrefabInstance: {fileID: 880087606638131039}
   m_PrefabAsset: {fileID: 0}

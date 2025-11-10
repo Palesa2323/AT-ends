@@ -50,7 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42b62a807b808d64d858591adc0feda5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerType: 0
+  towerType: 2
   Range: 10
   EnemiesLayer:
     serializedVersion: 2

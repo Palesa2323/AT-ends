@@ -1,28 +1,29 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "TowerUpgradeData", menuName = "ScriptableObjects/TowerUpgradeData")]
+[CreateAssetMenu(fileName = "TowerUpgradeData", menuName = "Tower/Tower Upgrade Data")]
 public class TowerUpgradeData : ScriptableObject
 {
     [System.Serializable]
-    public class TowerLevelSet
+    public class TowerLevelData
     {
         public TowerType towerType;
-        public GameObject[] levelPrefabs; // [0]=Lv1, [1]=Lv2, [2]=Lv3
+        public TowerData[] levels; // Index 0 = level 1, index 1 = level 2, etc.
     }
 
-    public TowerLevelSet[] towerSets;
+    public TowerLevelData[] allTowerLevels;
 
-    public GameObject GetTowerPrefab(TowerType type, int level)
+    public TowerData GetTowerData(TowerType type, int level)
     {
-        foreach (var set in towerSets)
+        foreach (var t in allTowerLevels)
         {
-            if (set.towerType == type)
+            if (t.towerType == type)
             {
-                int index = Mathf.Clamp(level - 1, 0, set.levelPrefabs.Length - 1);
-                return set.levelPrefabs[index];
+                if (level - 1 < t.levels.Length)
+                    return t.levels[level - 1];
+                else
+                    return null; // max level
             }
         }
-        Debug.LogWarning($"No tower prefab found for {type} level {level}");
         return null;
     }
 }

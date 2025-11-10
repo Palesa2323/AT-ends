@@ -100,7 +100,8 @@ public class WaveSpawner : MonoBehaviour
         }
     }
 
-    // ---------------- ADAPTIVE DIFFICULTY SYSTEM ----------------
+
+
     private float CalculateAdaptiveDifficulty()
     {
         float baseDR = currentWave * BaseDR_Multiplier;

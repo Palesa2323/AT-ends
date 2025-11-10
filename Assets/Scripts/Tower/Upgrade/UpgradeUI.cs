@@ -1,38 +1,83 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
-public class UpgradeUIManager : MonoBehaviour
+public class TowerUpgradeUI : MonoBehaviour
 {
     [Header("UI References")]
-    public GameObject upgradePanel;
+    public GameObject panel;
+    public Image towerIcon;
+    public Text towerNameText;
+    public Text upgradeCostText;
+    public Button upgradeButton;
+
+    private TowerType currentTowerType;
+    private int currentLevel;
 
     private void Start()
     {
-        if (upgradePanel != null)
-            upgradePanel.SetActive(false); // make sure it starts hidden
+        // Hide panel initially
+        panel.SetActive(false);
+
+        // Hook up button
+        upgradeButton.onClick.AddListener(OnUpgradePressed);
     }
 
-    public void OpenUpgradePanel()
+    /// <summary>
+    /// Call this when the player selects a tower type to upgrade
+    /// </summary>
+    public void ShowUpgradeUI(TowerType type)
     {
-        if (upgradePanel == null)
+        currentTowerType = type;
+        currentLevel = TowerManager.Instance.GetUpgradeLevel(type);
+
+        // Get next level data
+        int nextLevel = currentLevel + 1;
+        TowerData towerData = TowerManager.Instance.upgradeData.GetTowerData(type, nextLevel);
+
+        if (towerData == null)
         {
-            Debug.LogError("⚠️ UpgradePanel not assigned in the Inspector!");
+            Debug.Log($"{type} is already max level!");
+            panel.SetActive(false);
             return;
         }
 
-        upgradePanel.SetActive(true);
-        Debug.Log("✅ Upgrade panel opened!");
+        towerIcon.sprite = towerData.icon;
+        towerNameText.text = $"{type} Tower Lv {nextLevel}";
+        upgradeCostText.text = $"Cost: {towerData.upgradeCost}";
+
+        panel.SetActive(true);
     }
 
-    public void CloseUpgradePanel()
+    private void OnUpgradePressed()
     {
-        if (upgradePanel == null)
+        int nextLevel = currentLevel + 1;
+        TowerData towerData = TowerManager.Instance.upgradeData.GetTowerData(currentTowerType, nextLevel);
+
+        if (towerData == null)
         {
-            Debug.LogError("⚠️ UpgradePanel not assigned in the Inspector!");
+            Debug.Log("Tower is max level!");
+            panel.SetActive(false);
             return;
         }
 
-        upgradePanel.SetActive(false);
-        Debug.Log("❌ Upgrade panel closed!");
+        // Try spending resources
+        if (TowerManager.Instance.SpendResources(towerData.upgradeCost))
+        {
+            // Upgrade all towers of this type
+            TowerManager.Instance.UpgradeExistingTowers(currentTowerType);
+
+            Debug.Log($"{currentTowerType} upgraded to level {nextLevel}!");
+            ShowUpgradeUI(currentTowerType); // Refresh UI for next upgrade
+        }
+        else
+        {
+            Debug.Log("Not enough resources!");
+        }
     }
+
+    public void HidePanel()
+    {
+        panel.SetActive(false);
+    }
+
 }
-

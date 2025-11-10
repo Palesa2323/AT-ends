@@ -83,6 +83,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 6630715603438673841}
   m_SourcePrefab: {fileID: 100100000, guid: 0639b1679ae59c047a9add7c1c01bbcd, type: 3}
+--- !u!4 &5555045007095037169 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1151388028547126963, guid: 0639b1679ae59c047a9add7c1c01bbcd, type: 3}
+  m_PrefabInstance: {fileID: 4822776098914085442}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5633045041175435027 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 0639b1679ae59c047a9add7c1c01bbcd, type: 3}
@@ -148,20 +153,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 191abc17e3fda9f4dbf8d4a090246323, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  towerType: 0
-  Range: 0
+  towerType: 1
+  Range: 10
   EnemiesLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   Target: {fileID: 0}
-  TowerPivot: {fileID: 0}
-  Damage: 0
-  FireRate: 0
+  TowerPivot: {fileID: 5555045007095037169}
+  Damage: 40
+  FireRate: 6
   delay: 0
   fireTimer: 0
-  lineRenderer: {fileID: 0}
-  ProjectilePrefab: {fileID: 0}
-  ExplosionPrefab: {fileID: 0}
+  nextLevelPrefab: {fileID: 0}
+  upgradeCost: 100
+  lineRenderer: {fileID: -6061435165179457030}
+  upgradeData: {fileID: 0}
+  ProjectilePrefab: {fileID: 337113668907084733, guid: d949ba519ca7bf14484e796b95565683, type: 3}
+  ExplosionPrefab: {fileID: 2908787468587621604, guid: 9e8d520748bd8df40a6924f6e0d4e3d9, type: 3}
   ExplosionRadius: 3
 --- !u!120 &-6061435165179457030
 LineRenderer:
@@ -282,7 +290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2314b7cd33fcf57458dc5a8290e39a1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 40
+  MaxHealth: 70
 --- !u!114 &6630715603438673841
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -295,9 +303,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57c38d127e894434788e4f1549826dbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalTowerLevel: 0
-  bombTowerLevel: 0
-  cryoTowerLevel: 0
+  upgradeData: {fileID: 0}
   normalUpgradeCost: 100
   bombUpgradeCost: 200
-  cryoUpgradeCost: 300
+  cryptoUpgradeCost: 200
+  playerResources: 500

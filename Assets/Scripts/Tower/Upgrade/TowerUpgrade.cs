@@ -6,12 +6,13 @@ public class TowerManager : MonoBehaviour
     public static TowerManager Instance;
 
     [Header("Upgrade Data")]
-    public TowerUpgradeData upgradeData;
+    public TowerUpgradeData upgradeData;  // SO holding all tower prefabs for upgrades
 
     [Header("Upgrade Costs")]
     public int normalUpgradeCost = 100;
     public int bombUpgradeCost = 150;
     public int cryptoUpgradeCost = 200;
+    public int playerResources = 500; // starting resources
 
     private Dictionary<TowerType, int> towerLevels = new Dictionary<TowerType, int>();
     private List<TowerBehaviour> allTowers = new List<TowerBehaviour>();
@@ -23,14 +24,15 @@ public class TowerManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        // start all at level 1
+        // start all tower types at level 1
         foreach (TowerType type in System.Enum.GetValues(typeof(TowerType)))
             towerLevels[type] = 1;
     }
 
     public void RegisterTower(TowerBehaviour tower)
     {
-        allTowers.Add(tower);
+        if (!allTowers.Contains(tower))
+            allTowers.Add(tower);
     }
 
     public void UnregisterTower(TowerBehaviour tower)
@@ -52,6 +54,7 @@ public class TowerManager : MonoBehaviour
             return;
         }
 
+        // Determine cost
         int cost = type switch
         {
             TowerType.Normal => normalUpgradeCost,
@@ -60,12 +63,48 @@ public class TowerManager : MonoBehaviour
             _ => 0
         };
 
-       
+        if (!SpendResources(cost))
+            return;
+
+        // Increment global upgrade level
+        towerLevels[type] = currentLevel + 1;
+        Debug.Log($"{type} towers upgraded to Level {towerLevels[type]}!");
+
+        // Upgrade all existing towers of this type
+        UpgradeExistingTowers(type);
     }
 
-    private void UpgradeExistingTowers(TowerType type)
+    public bool SpendResources(int amount)
     {
-        GameObject nextPrefab = upgradeData.GetTowerPrefab(type, GetUpgradeLevel(type));
+        if (playerResources >= amount)
+        {
+            playerResources -= amount;
+            Debug.Log($"Spent {amount} resources. Remaining: {playerResources}");
+            return true;
+        }
+        else
+        {
+            Debug.Log("Not enough resources!");
+            return false;
+        }
+    }
+
+    public void AddResources(int amount)
+    {
+        playerResources += amount;
+        Debug.Log($"Added {amount} resources. Total: {playerResources}");
+    }
+
+    public void UpgradeExistingTowers(TowerType type)
+    {
+        TowerData data = upgradeData.GetTowerData(type, GetUpgradeLevel(type));
+        if (data == null)
+        {
+            Debug.Log($"{type} tower is already max level or missing data!");
+            return;
+        }
+
+        GameObject nextPrefab = data.towerPrefab;
 
         foreach (var tower in allTowers.ToArray())
         {
@@ -82,5 +121,8 @@ public class TowerManager : MonoBehaviour
                 RegisterTower(newTowerComp);
             }
         }
+            // Increment the level
+        towerLevels[type]++;
     }
+
 }
