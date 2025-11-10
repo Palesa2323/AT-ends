@@ -159,15 +159,6 @@ MonoBehaviour:
   CurrentHealth: 100
   healthSlider: {fileID: 3181078376942782057, guid: c3c3b0831bf1b4d4da81d3ce42496aac, type: 3}
   healthFill: {fileID: 3642732020097125247, guid: 81939d54749c4474b8176a7c24576b8f, type: 3}
-  Range: 15
-  Damage: 10
-  FireRate: 2
-  EnemyLayer:
-    serializedVersion: 2
-    m_Bits: 64
-  FirePoint: {fileID: 0}
-  lineRendererPrefab: {fileID: 2975311441749097370}
-  MaxBeams: 10
 --- !u!65 &-4342840371567321817
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -213,7 +204,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 132a8f937b886124eb3374c13df8ab8f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

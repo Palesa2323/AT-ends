@@ -13,7 +13,7 @@ public class GameLoop : MonoBehaviour
     public WaveSpawner waveSpawner;
 
     [Header("Resources")]
-    public static int Resources = 100;
+    public static int Resources = 200;
     public TextMeshProUGUI resourceText;
 
     [Header("Towers")]
