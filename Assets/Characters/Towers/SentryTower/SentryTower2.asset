@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: SentryTower2
   m_EditorClassIdentifier: 
   towerType: 0
-  towerName: 'Sentry Tower lvl 2 '
   towerPrefab: {fileID: 832793629603051503, guid: c1a9656249e034340994e7b337654029, type: 3}
+  icon: {fileID: 0}
   damage: 25
   fireRate: 4
   range: 18
-  cost: 75
+  upgradeCost: 155

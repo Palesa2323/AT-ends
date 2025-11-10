@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8658510db81f0744d91612b53bc28b4d, type: 3}
   m_Name: TowerUpgradeData
   m_EditorClassIdentifier: 
-  towerSets: []
+  allTowerLevels: []
